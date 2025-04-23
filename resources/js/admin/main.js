@@ -41,4 +41,3 @@ Array.from(wyswigPanels).forEach((element) => {
 
     element.appendChild(button);
 });
-

@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('dev_name');
             $table->string('view_name');
-            $table->string('default_value');
-            $table->string('value');
+            $table->json('values');
             $table->timestamps();
         });
     }

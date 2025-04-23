@@ -27,16 +27,21 @@ class RedirectLoginPage
 
         $Element_Structures = \App\Models\element_structures::where('view_name', $request->route()->getName())->get();
         $Element_Structure_variables = $Element_Structures->reduce(function ($carry, $Element_Structure) {
-            $value = empty($Element_Structure->value) ? $Element_Structure->default_value : $Element_Structure->value;
+            $values = $Element_Structure->values;
+            $Template = file_get_contents(public_path('partials/'.$Element_Structure->dev_name.'.blade.html'));
+            foreach ($values as $value) {
+                $Template = preg_replace('/DEFAULT VALUE/', $value, $Template, 1);
+            }
+
             $carry[$Element_Structure->dev_name][] = [
-                'value' => $value,
+                'value' => $Template,
                 'id' => $Element_Structure->id
             ];
 
             return $carry;
         }, []);
         $Element_Structure_variables_original = $Element_Structure_variables;
-        
+
         view()->share('Element_Structure_variables', $Element_Structure_variables);
         view()->share('Element_Structure_variables_original', $Element_Structure_variables_original);
 
