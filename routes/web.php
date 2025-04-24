@@ -41,7 +41,8 @@ Route::post('/seeChanges', function (Request $request) {
         foreach ($Changes['added'] as $added_value) {
             // $line = json_encode($added_value, JSON_UNESCAPED_UNICODE) . PHP_EOL;
             // Storage::append('changes_log.txt', 'added: '.$line);
-            App\Models\element_structures::AddElement($added_value['jsonvariables'], $added_value['dev_name'], $added_value['view_name']);
+            // TODO DOKONCZ AGAIN XD
+            //App\Models\element_structures::AddElement($added_value['jsonvariables'], $added_value['dev_name'], $added_value['view_name']);
         }
     }
 

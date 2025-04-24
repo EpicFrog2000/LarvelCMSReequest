@@ -17,10 +17,14 @@ class element_structuresFactory extends Factory
     public function definition(): array
     {
         return [
+            'id' => $this->faker->randomNumber(),
+            'parentId' => $this->faker->slug,
+            'type' => $this->faker->slug,
+            'order' => $this->faker->slug,
             'dev_name' => $this->faker->slug,
-            'default_value' => $this->faker->word,
             'value' => $this->faker->word,
             'view_name' => $this->faker->word,
+            'CustomStyleOptions' => $this->faker->word,
         ];
     }
 
