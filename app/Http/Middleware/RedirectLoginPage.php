@@ -26,10 +26,17 @@ class RedirectLoginPage
             return redirect()->route('home');;
         }
 
-        $containers = \App\Models\site_settings->get();
 
-
-
+        $settings = \App\Models\site_settings::get();
+        $SiteSettings = [];
+        foreach ($settings as $setting) {
+            $SiteSettings[$setting->nazwa] = $setting->value;
+        }
+        view()->share('Site_Settings', $SiteSettings);
+        
+        
+        
+        
         //Pobiera dana elementów wyswig z bazy, organizuje je i (TODO) wkłada w templaty
         $viewName = $request->route()->getName();             
 

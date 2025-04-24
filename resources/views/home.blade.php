@@ -10,6 +10,12 @@
 
 <p>Treść strony.</p>
 
+@foreach($Site_Settings as $name => $value)
+    <li><strong>{{ $name }}:</strong> {{ $value }}</li>
+@endforeach
+
+<h3>{{ $Site_Settings['nazwa jakiegoś tam sobie globalnego ustawienia xdd'] ?? 'Brak ustawienia' }}</h3>
+
 
 
 @foreach ($Containers_Data as $containerName => $container)
