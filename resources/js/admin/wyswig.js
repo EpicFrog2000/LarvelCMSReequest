@@ -114,3 +114,15 @@ function removeWyswigElement(wyswigContainerElement, index) {
     }
 }
 window.removeWyswigElement = removeWyswigElement;
+
+function getWyswigModules(){
+    fetch('/getWyswigModules')
+    .then(response => response.json())
+    .then(data => {
+        console.log('Template filenames:', data);
+    })
+    .catch(error => {
+        console.error('Error fetching templates:', error);
+    });
+}
+window.getWyswigModules = getWyswigModules;

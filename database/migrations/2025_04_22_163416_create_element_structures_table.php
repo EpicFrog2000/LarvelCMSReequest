@@ -43,6 +43,16 @@ return new class extends Migration
             'created_at'=> NOW(),
             'updated_at'=> NOW(),
         ]);
+        DB::table('element_structures')->insert([
+            'dev_name' => 'testowy',
+            'view_name' => 'home',
+            'parentId' => 2,
+            'type' => 'text',
+            'values' => json_encode(['gunwo', 'pizda', 'qwerqwer']),
+            'order' => 1,
+            'created_at'=> NOW(),
+            'updated_at'=> NOW(),
+        ]);
     }
 
     /**
