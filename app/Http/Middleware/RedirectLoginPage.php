@@ -40,98 +40,126 @@ class RedirectLoginPage
         
         //Pobiera dana elementów wyswig z bazy, organizuje je i (TODO) wkłada w templaty
         $viewName = $request->route()->getName();             
+        Helper::$viewName = $viewName;
 
-        $containers = \App\Models\element_structures::where('view_name', $viewName)->where('type', 'container')->get();
-        $containersData = [];
-    
-        
-        foreach ($containers as $container) {        
-            $container->values = Helper::GetContainersChildrenPopulatedTemplates($container, $viewName);
-        
-            $containersData[$container->dev_name] = Helper::GetContainersTemplatePopulatedWithValues($container);
+        $onlyContainers = \App\Models\element_structures::where('view_name', $viewName)
+            ->where('type', 'container')
+            ->whereNull('parentId')
+            ->get();
+
+        $array = [];
+        foreach ($onlyContainers as $container) {
+            $array[$container->dev_name] = ['children' => Helper::getContainers2($container->id), 'id' => $container->id, 'value' => ''];
         }
+       
+        Helper::processContainers($array);
+        dd($array['container_1']);
+        // TODO MERGE TREE
         
-        view()->share('Containers_Data', $containersData);
-
-
-        // //Legacy
-        // $Element_Structures = \App\Models\element_structures::where('view_name', $viewName)->get();
-
-        // $Element_Structure_variables = [];
-
-        // foreach ($Element_Structures as $Element_Structure) {
-        //     $Element_Structure_variables[$Element_Structure->dev_name][] = [
-        //         'value' => Helper::GetElementsTemplatePopulatedWithValues($Element_Structure),
-        //         'id' => $Element_Structure->id
-        //     ];
-        // }
-        // $Element_Structure_variables_original = $Element_Structure_variables;
-
-        // view()->share('Element_Structure_variables', $Element_Structure_variables);
-        // view()->share('Element_Structure_variables_original', $Element_Structure_variables_original);
+        view()->share('Containers_Data', $array);
+        
         return $next($request);
     }
 }
 
 
 class Helper{
-    public static function GetElementsTemplatePopulatedWithValues($Element){
-        $Template = '';
-        if (!File::exists(public_path('partials/' . $Element->dev_name . '.blade.html'))) {
-            $Template = "BLAK PLIKU TEMPLATE DLA TEGO ELEMENTU";
-        } else {
-            $Template = file_get_contents(public_path('partials/' . $Element->dev_name . '.blade.html'));
-            if ($Element->values) {
-                foreach ($Element->values as $value) {
-                    $Template = preg_replace('/DEFAULT VALUE/', $value, $Template, 1);
-                }
-            }
+    public static $viewName = ''; 
+
+    public static function getContainers2($id, )
+    {
+        $result = [];
+        $containerChildren = \App\Models\element_structures::where('view_name', self::$viewName)
+            ->where('type', 'container')
+            ->where('parentId', $id)
+            ->get();
+
+        foreach ($containerChildren as $child) {
+            $result[$child->dev_name] = ['children' => self::getContainers2($child->id), 'id' => $child->id, 'value' => ''];
         }
-        return $Template;
+        return $result;
     }
 
-    public static function GetContainersTemplatePopulatedWithValues($container){
+    public static function GetElementsTemplate($dev_name){
         $template = '';
-        if (!File::exists(public_path('partials/'.$container->dev_name.'.blade.html'))) {
+        if (!File::exists(public_path('partials/' . $dev_name . '.blade.html'))) {
             $template = "BRAK PLIKU TEMPLATE DLA TEGO ELEMENTU";
         } else {
-            $template = file_get_contents(public_path('partials/'.$container->dev_name.'.blade.html'));
-            if($container->values){
-                foreach (array_reverse($container->values) as $value) {
-                    $template = preg_replace('/DEFAULT VALUE/', 'DEFAULT VALUE' . $value, $template, 1);
-                }
-                $template = preg_replace('/DEFAULT VALUE/', '', $template, 1);
-            }
+            $template = file_get_contents(public_path('partials/' . $dev_name . '.blade.html'));
         }
         return $template;
     }
 
+public static function processContainers(array &$containers)
+{
+    foreach ($containers as $devName => &$children) {
+        // Najpierw rekurencyjnie przetwarzaj dzieci
+        if (!empty($children['children'])) {
+            self::processContainers($children['children']);
+        }
 
+        // Szablon kontenera
+        $children['template'] = self::GetElementsTemplate($devName);
+        $children['filled_template'] = $children['template'];
 
-
-    public static function GetContainersChildrenPopulatedTemplates($container, $viewName){
-        $currentLevel = \App\Models\element_structures::where('view_name', $viewName)
-            ->where('parentId', $container->id)
+        // Pobranie wartości nie-containerów
+        $children['values'] = \App\Models\element_structures::where('view_name', Helper::$viewName)
+            ->where('parentId', $children['id'])
+            ->where('type', '!=', 'container')
             ->orderBy('order')
             ->get();
-        
-        $allChildren = [];
-        while ($currentLevel->isNotEmpty()) {
-            $nextLevel = collect();
-            foreach ($currentLevel as $child) {
-                $nextChildren = \App\Models\element_structures::where('view_name', $viewName)
-                    ->where('parentId', $child->id)
-                    ->orderBy('order')
-                    ->get();
-                $allChildren[] = Helper::GetElementsTemplatePopulatedWithValues($child);
-                $nextLevel = $nextLevel->merge($nextChildren);
+
+        // Jeśli są wartości
+        if ($children['values']->isNotEmpty()) {
+            foreach (array_reverse($children['values']->all()) as $value) {
+                $valueTemplate = self::GetElementsTemplate($value->dev_name);
+
+                // Jeśli $value ma jakieś dane które trzeba zamienić w template
+                // (UWAGA: Tu musisz sam zdefiniować jakie pola chcesz wkładać)
+                // Zakładam, że każdy $value ma jedno pole np. 'value'
+                foreach($value->values as $value){
+                    $valueTemplate = preg_replace(
+                        '/DEFAULT VALUE/',
+                        $value, // <- zmień na odpowiednie pole
+                        $valueTemplate,
+                        1
+                    );
+                }
+
+
+                // Wstawiamy do filled_template kontenera
+                $children['filled_template'] = preg_replace(
+                    '/DEFAULT VALUE/',
+                    $valueTemplate,
+                    $children['filled_template'],
+                    1
+                );
             }
-            $currentLevel = $nextLevel;
+
+            // Na końcu, jakby jeszcze coś zostało, usuń puste DEFAULT VALUE
+            $children['filled_template'] = preg_replace('/DEFAULT VALUE/', '', $children['filled_template']);
         }
-        return $allChildren;
     }
+}
 
+public static function mergeEverything(array &$container)
+{
+    if (!empty($container['children'])) {
+        foreach ($container['children'] as &$child) {
+            self::mergeEverything($child);
+            $container['filled_template'] = preg_replace(
+                '/DEFAULT VALUE/',
+                $child['filled_template'],
+                $container['filled_template'],
+                1
+            );
+        }
 
+        // here jeszczer dodaj childreny z tego czyli będzie powyższa funkcja do podziłu
+
+        $container['filled_template'] = preg_replace('/DEFAULT VALUE/', '', $container['filled_template']);
+    }
+}
 
 
 
