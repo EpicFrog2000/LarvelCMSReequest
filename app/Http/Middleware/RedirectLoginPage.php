@@ -51,11 +51,17 @@ class RedirectLoginPage
 
         $array = [];
         foreach ($onlyContainers as $container) {
-            $array[$container->dev_name] = ['children' => Helper::getContainers2($container->id), 'id' => $container->id, 'value' => '', 'order' => $container->order];
+            $array[$container->dev_name] = ['values' => Helper::getContainers2($container->id), 'id' => $container->id, 'order' => $container->order, 'template' => Helper::GetElementsTemplate($container->dev_name), 'filled_template' => ''];
         }
-        Helper::processContainers($array);
+
+        Helper::GetContainerValues($array);
+        
+        //Helper::SortContainerValues($array);
+        dd($array);
         Helper::mergeEverything($array);
+        dd($array);
         Helper::removeDefaultsFromTemplateContainers($array['container_1']['filled_template']);
+        
         view()->share('Containers_Data', $array);
         
         return $next($request);
@@ -66,7 +72,7 @@ class RedirectLoginPage
 class Helper{
     public static $viewName = ''; 
 
-    public static function getContainers2($id, )
+    public static function getContainers2($id)
     {
         $result = [];
         $containerChildren = \App\Models\element_structures::where('view_name', self::$viewName)
@@ -75,9 +81,8 @@ class Helper{
             ->orderBy('order')
             ->get();
         foreach ($containerChildren as $child) {
-            $result[$child->dev_name] = ['children' => self::getContainers2($child->id), 'id' => $child->id, 'value' => '', 'order' => $child->order];
+            $result[$child->dev_name] = ['values' => self::getContainers2($child->id), 'id' => $child->id, 'order' => $child->order, 'template' => self::GetElementsTemplate($child->dev_name), 'filled_template' => ''];
         }
-        
         return $result;
     }
 
@@ -91,50 +96,62 @@ class Helper{
         return $template;
     }
 
-    public static function processContainers(&$containers)
+    public static function GetContainerValues(&$containers)
     {
         foreach ($containers as $devName => &$children) {
-            if (!empty($children['children'])) {
-                self::processContainers($children['children']);
+            if (!empty($children['values'])) {
+                Helper::GetContainerValues($children['values']);
             }
-            $children['template'] = self::GetElementsTemplate($devName);
-            $children['filled_template'] = $children['template'];
 
-            $children['values'] = \App\Models\element_structures::where('view_name', Helper::$viewName)
+            $new_values = \App\Models\element_structures::where('view_name', Helper::$viewName)
                 ->where('parentId', $children['id'])
                 ->where('type', '!=', 'container')
                 ->orderBy('order')
                 ->get();
-            
-            $elems = [];
-            if ($children['values']->isNotEmpty()) {
-                foreach ($children['values']->all() as $value) {
-                    $valueTemplate = self::GetElementsTemplate($value->dev_name);
-                    Helper::ZamienWartosciWTemplate($valueTemplate, $value->values);
-                    $elems[] = $valueTemplate;
-                    Helper::DodajWartoscDoTemplate($children['filled_template'], $valueTemplate);
-                }
+
+            foreach($new_values as $value){
+                $children['values'][] = ['values' => $value->values, 'id' => $value->id, 'order' => $value->order, 'template' => Helper::GetElementsTemplate($value->dev_name), 'filled_template' => Helper::ZamienWartosciWTemplate(Helper::GetElementsTemplate($value->dev_name), $value->values)];
             }
-            dd($elems);
+            usort($children['values'], function ($a, $b) {
+                return $a['order'] <=> $b['order'];
+            });
         }
     }
 
-    public static function mergeEverything(&$containers)
+
+
+    public static function mergeEverything(array &$containers)
     {
-        foreach ($containers as $devName => &$children) {
-            if (isset($children['children']) && is_array($children['children'])) {
-                self::processContainers($children['children']);
+        foreach ($containers as $devName => &$container) {
+
+            if (!empty($container['values'])) {
+                self::mergeEverything($container['values']);
             }
-            foreach ($children['children'] as $devName2 => &$children2) {
-                Helper::DodajWartoscDoTemplate($children['filled_template'], $children2['filled_template']);
+
+            if(isset($container['id'])){
+                dd($container);
             }
+            // pomysl moze pojdz po !"filled_template"
+            // if (!empty($container['values'])) {
+            //     foreach ($container['values'] as &$child) {
+            //         $container['filled_template'] = preg_replace(
+            //             '/DEFAULT VALUE/',
+            //             $child['filled_template'],
+            //             $container['filled_template'],
+            //             1
+            //         );
+            //     }
+            //     $container['filled_template'] = preg_replace('/DEFAULT VALUE/', '', $container['filled_template']);
+            // }
         }
     }
 
-    public static function ZamienWartosciWTemplate(&$template, $values){
+
+    public static function ZamienWartosciWTemplate($template, $values){
         foreach($values as $value){
             $template = preg_replace('/DEFAULT VALUE/', $value, $template, 1);
         }
+        return $template;
     }
     
     public static function DodajWartoscDoTemplate(&$template, $value){
