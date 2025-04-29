@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Nette\Schema\Elements\Type;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\File;
 
@@ -45,17 +46,16 @@ class RedirectLoginPage
         $onlyContainers = \App\Models\element_structures::where('view_name', $viewName)
             ->where('type', 'container')
             ->whereNull('parentId')
+            ->orderBy('order')
             ->get();
 
         $array = [];
         foreach ($onlyContainers as $container) {
-            $array[$container->dev_name] = ['children' => Helper::getContainers2($container->id), 'id' => $container->id, 'value' => ''];
+            $array[$container->dev_name] = ['children' => Helper::getContainers2($container->id), 'id' => $container->id, 'value' => '', 'order' => $container->order];
         }
-       
         Helper::processContainers($array);
-        dd($array['container_1']);
-        // TODO MERGE TREE
-        
+        Helper::mergeEverything($array);
+        Helper::removeDefaultsFromTemplateContainers($array['container_1']['filled_template']);
         view()->share('Containers_Data', $array);
         
         return $next($request);
@@ -72,11 +72,12 @@ class Helper{
         $containerChildren = \App\Models\element_structures::where('view_name', self::$viewName)
             ->where('type', 'container')
             ->where('parentId', $id)
+            ->orderBy('order')
             ->get();
-
         foreach ($containerChildren as $child) {
-            $result[$child->dev_name] = ['children' => self::getContainers2($child->id), 'id' => $child->id, 'value' => ''];
+            $result[$child->dev_name] = ['children' => self::getContainers2($child->id), 'id' => $child->id, 'value' => '', 'order' => $child->order];
         }
+        
         return $result;
     }
 
@@ -90,77 +91,60 @@ class Helper{
         return $template;
     }
 
-public static function processContainers(array &$containers)
-{
-    foreach ($containers as $devName => &$children) {
-        // Najpierw rekurencyjnie przetwarzaj dzieci
-        if (!empty($children['children'])) {
-            self::processContainers($children['children']);
-        }
-
-        // Szablon kontenera
-        $children['template'] = self::GetElementsTemplate($devName);
-        $children['filled_template'] = $children['template'];
-
-        // Pobranie wartości nie-containerów
-        $children['values'] = \App\Models\element_structures::where('view_name', Helper::$viewName)
-            ->where('parentId', $children['id'])
-            ->where('type', '!=', 'container')
-            ->orderBy('order')
-            ->get();
-
-        // Jeśli są wartości
-        if ($children['values']->isNotEmpty()) {
-            foreach (array_reverse($children['values']->all()) as $value) {
-                $valueTemplate = self::GetElementsTemplate($value->dev_name);
-
-                // Jeśli $value ma jakieś dane które trzeba zamienić w template
-                // (UWAGA: Tu musisz sam zdefiniować jakie pola chcesz wkładać)
-                // Zakładam, że każdy $value ma jedno pole np. 'value'
-                foreach($value->values as $value){
-                    $valueTemplate = preg_replace(
-                        '/DEFAULT VALUE/',
-                        $value, // <- zmień na odpowiednie pole
-                        $valueTemplate,
-                        1
-                    );
-                }
-
-
-                // Wstawiamy do filled_template kontenera
-                $children['filled_template'] = preg_replace(
-                    '/DEFAULT VALUE/',
-                    $valueTemplate,
-                    $children['filled_template'],
-                    1
-                );
+    public static function processContainers(&$containers)
+    {
+        foreach ($containers as $devName => &$children) {
+            if (!empty($children['children'])) {
+                self::processContainers($children['children']);
             }
+            $children['template'] = self::GetElementsTemplate($devName);
+            $children['filled_template'] = $children['template'];
 
-            // Na końcu, jakby jeszcze coś zostało, usuń puste DEFAULT VALUE
-            $children['filled_template'] = preg_replace('/DEFAULT VALUE/', '', $children['filled_template']);
+            $children['values'] = \App\Models\element_structures::where('view_name', Helper::$viewName)
+                ->where('parentId', $children['id'])
+                ->where('type', '!=', 'container')
+                ->orderBy('order')
+                ->get();
+            
+            $elems = [];
+            if ($children['values']->isNotEmpty()) {
+                foreach ($children['values']->all() as $value) {
+                    $valueTemplate = self::GetElementsTemplate($value->dev_name);
+                    Helper::ZamienWartosciWTemplate($valueTemplate, $value->values);
+                    $elems[] = $valueTemplate;
+                    Helper::DodajWartoscDoTemplate($children['filled_template'], $valueTemplate);
+                }
+            }
+            dd($elems);
         }
     }
-}
 
-public static function mergeEverything(array &$container)
-{
-    if (!empty($container['children'])) {
-        foreach ($container['children'] as &$child) {
-            self::mergeEverything($child);
-            $container['filled_template'] = preg_replace(
-                '/DEFAULT VALUE/',
-                $child['filled_template'],
-                $container['filled_template'],
-                1
-            );
+    public static function mergeEverything(&$containers)
+    {
+        foreach ($containers as $devName => &$children) {
+            if (isset($children['children']) && is_array($children['children'])) {
+                self::processContainers($children['children']);
+            }
+            foreach ($children['children'] as $devName2 => &$children2) {
+                Helper::DodajWartoscDoTemplate($children['filled_template'], $children2['filled_template']);
+            }
         }
-
-        // here jeszczer dodaj childreny z tego czyli będzie powyższa funkcja do podziłu
-
-        $container['filled_template'] = preg_replace('/DEFAULT VALUE/', '', $container['filled_template']);
     }
-}
 
+    public static function ZamienWartosciWTemplate(&$template, $values){
+        foreach($values as $value){
+            $template = preg_replace('/DEFAULT VALUE/', $value, $template, 1);
+        }
+    }
+    
+    public static function DodajWartoscDoTemplate(&$template, $value){
+        $template = str_replace('DEFAULT VALUE', $value.'DEFAULT VALUE', $template);
+    }
 
+    
+    public static function removeDefaultsFromTemplateContainers(&$template) {
+        $template = preg_replace('/<\/wyswigElement>\s*DEFAULT VALUE/', '</wyswigElement>', $template);
+        $template = preg_replace('/<\/wyswigContainer>\s*DEFAULT VALUE/', '</wyswigContainer>', $template);
+    }
 
 }

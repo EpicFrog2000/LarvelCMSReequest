@@ -31,7 +31,7 @@ return new class extends Migration
             'order' => 1,
             'created_at'=> NOW(),
             'updated_at'=> NOW(),
-            ]);
+        ]);
 
         DB::table('element_structures')->insert([
             'dev_name' => 'testowy',
@@ -44,12 +44,41 @@ return new class extends Migration
             'updated_at'=> NOW(),
         ]);
         DB::table('element_structures')->insert([
+            'dev_name' => 'container_1',
+            'view_name' => 'home',
+            'type' => 'container',
+            'parentId' => 1,
+            'order' => 2,
+            'created_at'=> NOW(),
+            'updated_at'=> NOW(),
+        ]);
+        DB::table('element_structures')->insert([
             'dev_name' => 'testowy',
             'view_name' => 'home',
-            'parentId' => 2,
+            'parentId' => 3,
             'type' => 'text',
-            'values' => json_encode(['gunwo', 'pizda', 'qwerqwer']),
+            'values' => json_encode(['2gunwo', '2pizda', '2qwerqwer']),
+            'order' => 2,
+            'created_at'=> NOW(),
+            'updated_at'=> NOW(),
+        ]);
+        DB::table('element_structures')->insert([
+            'dev_name' => 'testowy',
+            'view_name' => 'home',
+            'parentId' => 3,
+            'type' => 'text',
+            'values' => json_encode(['1gunwo', '1pizda', '1qwerqwer']),
             'order' => 1,
+            'created_at'=> NOW(),
+            'updated_at'=> NOW(),
+        ]);
+        DB::table('element_structures')->insert([
+            'dev_name' => 'testowy',
+            'view_name' => 'home',
+            'parentId' => 1,
+            'type' => 'text',
+            'values' => json_encode(['xdgunwo', 'xd1xdpizda', 'xd1xqwerqwer']),
+            'order' => 3,
             'created_at'=> NOW(),
             'updated_at'=> NOW(),
         ]);
