@@ -1,21 +1,48 @@
 const adminMenu = document.getElementById("adminMenu");
-const wyswigPanels = document.getElementsByTagName("wyswigPanel");
+const UstawieniaElementuOption = adminMenu.querySelector('[id="Ustawienia Elementu"]');
+window.CurrentChosenElement = undefined;
 
 function hideAdminMenu() {
     adminMenu.classList.remove("visible");
+    clearTabs();
 }
 
 function showAdminMenu(targetElement) {
-    if (targetElement) {
-        if (targetElement.classList.contains("wyswig")) {
-            console.log('wyswig');
-        }
+    GetWyswigTargetElement(targetElement);
+    clearTabs();
+    if(window.CurrentChosenElement){
+        UstawieniaElementuOption.style.display = 'block';
+    }else{
+        UstawieniaElementuOption.style.display = 'none';
     }
     adminMenu.classList.add("visible");
 }
 
-function toggleAdminMenu() {
-    adminMenu.classList.toggle("visible");
+function GetWyswigTargetElement(targetElement){
+    if (targetElement) {
+        console.log(targetElement);
+        let type = targetElement.tagName;
+        if(type == 'WYSWIGVARIABLE'){
+            window.CurrentChosenElement = targetElement;
+            return;
+        }else{
+            let tmptargetElement = targetElement;
+            while(true){
+                if(!tmptargetElement.parentElement){
+                    window.CurrentChosenElement = undefined;
+                    return;
+                }
+                tmptargetElement = tmptargetElement.parentElement;
+                if(tmptargetElement.tagName == 'WYSWIGELEMENT'  || tmptargetElement.tagName == 'WYSWIGCONTAINER'){
+                    window.CurrentChosenElement = tmptargetElement;
+                    return;
+                }
+            }
+        }
+    }else{
+        window.CurrentChosenElement = undefined;
+        return;
+    }
 }
 
 document.addEventListener("contextmenu", (e) => {
@@ -29,15 +56,4 @@ document.addEventListener("click", (e) => {
     if (!adminMenu.contains(e.target)) {
         hideAdminMenu();
     }
-});
-
-Array.from(wyswigPanels).forEach((element) => {
-    const button = document.createElement("button");
-    button.textContent = "+";
-    button.classList.add("wyswigpanelbutton");
-    button.onclick = () => {
-        console.log("Button clicked in:", element);
-    };
-
-    element.appendChild(button);
 });

@@ -55,4 +55,7 @@ Route::post('/seeChanges', function (Request $request) {
 
 Route::get('/wyswig-element/{dev_name}', [wyswigController::class, 'getWyswigElement'])->name('getwyswigelement');
 
+Route::get('/getWyswigTemplate/{dev_name}', [wyswigController::class, 'getWyswigTemplate'])->name('getwyswigtemplate');
+
+
 Route::get('/getWyswigModules', [wyswigController::class, 'getWyswigModules']);

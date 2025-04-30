@@ -25,7 +25,7 @@ return new class extends Migration
 
         // Przykłądowe elementy i kontener
         DB::table('element_structures')->insert([
-            'dev_name' => 'container_1',
+            'dev_name' => 'Container_Default',
             'view_name' => 'home',
             'type' => 'container',
             'order' => 1,
@@ -34,7 +34,7 @@ return new class extends Migration
         ]);
 
         DB::table('element_structures')->insert([
-            'dev_name' => 'testowy',
+            'dev_name' => 'Text_colum_3',
             'view_name' => 'home',
             'parentId' => 1,
             'type' => 'text',
@@ -44,7 +44,7 @@ return new class extends Migration
             'updated_at'=> NOW(),
         ]);
         DB::table('element_structures')->insert([
-            'dev_name' => 'container_1',
+            'dev_name' => 'Container_Default',
             'view_name' => 'home',
             'type' => 'container',
             'parentId' => 1,
@@ -53,7 +53,7 @@ return new class extends Migration
             'updated_at'=> NOW(),
         ]);
         DB::table('element_structures')->insert([
-            'dev_name' => 'testowy',
+            'dev_name' => 'Text_colum_3',
             'view_name' => 'home',
             'parentId' => 3,
             'type' => 'text',
@@ -63,7 +63,7 @@ return new class extends Migration
             'updated_at'=> NOW(),
         ]);
         DB::table('element_structures')->insert([
-            'dev_name' => 'testowy',
+            'dev_name' => 'Text_colum_3',
             'view_name' => 'home',
             'parentId' => 3,
             'type' => 'text',
@@ -73,7 +73,7 @@ return new class extends Migration
             'updated_at'=> NOW(),
         ]);
         DB::table('element_structures')->insert([
-            'dev_name' => 'testowy',
+            'dev_name' => 'Text_colum_3',
             'view_name' => 'home',
             'parentId' => 1,
             'type' => 'text',
