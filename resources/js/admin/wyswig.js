@@ -222,6 +222,7 @@ function zapiszWyswig(){
 
 function modifyDataStructure(id, action){
     // ModifiedValues
+
 }
 
 window.zapiszWyswig = zapiszWyswig

@@ -5,9 +5,13 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite(['resources/css/app.css'])
     @if(session('_auth'))
+        @vite(['resources/js/admin/adminMenu.js'])
         @vite(['resources/js/admin/main.js'])
         @vite(['resources/js/admin/wyswig.js'])
+        
         @include('partials.adminMenu')
+
+        
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 let StartValues = @json($Containers_Data);
