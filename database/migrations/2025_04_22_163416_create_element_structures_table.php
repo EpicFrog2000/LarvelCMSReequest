@@ -73,6 +73,15 @@ return new class extends Migration
             'created_at'=> NOW(),
             'updated_at'=> NOW(),
         ]);
+        DB::table('element_structures')->insert([
+            'dev_name' => 'Image_200x200',
+            'view_name' => 'home',
+            'parentId' => 1,
+            'type' => 'media',
+            'order' => 4,
+            'created_at'=> NOW(),
+            'updated_at'=> NOW(),
+        ]);
     }
 
     public function down(): void

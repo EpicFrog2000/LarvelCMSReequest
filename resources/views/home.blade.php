@@ -25,6 +25,7 @@
 </wyswigPageData>
 
 
+
 <!-- inne elementy -->
 
 @include('partials.slider')

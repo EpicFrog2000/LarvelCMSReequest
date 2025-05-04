@@ -1,16 +1,16 @@
 <?php
-
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Helper;
 
-class wyswigController extends Controller
+class wyswigController
 {
     public function getWyswigElement($dev_name)
     {
         return file_get_contents(public_path('modules/'.$dev_name.'.blade.html'));
     }
+    
     public function getWyswigModules(): JsonResponse
     {
         $filenames = collect(File::files(public_path('modules/')))
@@ -22,5 +22,9 @@ class wyswigController extends Controller
 
     public function getWyswigTemplate($dev_name){
         return Helper::GetElementsTemplate($dev_name);
+    }
+
+    public function getFilesAndFolders($path){
+        return Helper::getFilesAndFolders($path);
     }
 }

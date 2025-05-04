@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\File;
+use Illuminate\Http\Request;
 
 
 class Helper{
@@ -90,7 +91,9 @@ class Helper{
             foreach($new_values as $value){
                 $element_values = \App\Models\element_values::where('view_name', Helper::$viewName)
                     ->where('parentId',  $value->id)
-                    ->orderBy('order')->get()->pluck('value','id')->toArray();
+                    ->orderBy('order')->get()->mapWithKeys(function ($item) {
+                        return [$item->id => ['value' => $item->value, 'type' => $item->type]];
+                    })->toArray();
 
                 $children['values'][] = ['values' => $element_values, 'id' => $value->id, 'order' => $value->order, 'template' => Helper::GetElementsTemplate($value->dev_name, $value->id), 'filled_template' => Helper::ZamienWartosciWTemplate(Helper::GetElementsTemplate($value->dev_name, $value->id), $element_values)];
             }
@@ -123,11 +126,23 @@ class Helper{
 
     private static function ZamienWartosciWTemplate($template, $values){
         foreach($values as $key => $value){
-            $template = preg_replace('/<wyswigvariable.*?/s', "<wyswigvariable data-id=\"{$key}\"", $template);
-            $template = preg_replace('/DEFAULT VALUE/', $value, $template, 1);
+            
+            if($value['type'] == 'text'){
+                $template = preg_replace('/<wyswigvariable.*?/s', "<wyswigvariable data-id=\"{$key}\"", $template);
+                $template = preg_replace('/DEFAULT VALUE/', $value['value'], $template, 1);
+            }else if($value['type'] == 'media'){
+                $template = preg_replace('/>/', "data-id=\"{$key}\">", $template);
+                if(!empty($value['value'])){
+                    $template = preg_replace('/media\/NoImage\.jpg/', asset($value['value']), $template, 1);
+                }else{
+                    $template = preg_replace('/media\/NoImage\.jpg/', asset('media/NoImage.jpg'), $template, 1);
+                }
+            }
         }
         return $template;
     }
+
+
     
     private static function DodajWartoscDoTemplate(&$template, $value){
         $template = str_replace('DEFAULT VALUE', $value.'DEFAULT VALUE', $template);
@@ -136,5 +151,41 @@ class Helper{
     private static function removeDefaultsFromTemplateContainers(&$template) {
         $template = preg_replace('/DEFAULT VALUE\s*<\/wyswigElement>/', '</wyswigElement>', $template);
         $template = preg_replace('/DEFAULT VALUE\s*<\/wyswigContainer>/', '</wyswigContainer>', $template);
+    }
+
+    
+    public static function getFilesAndFolders($path) {
+        $result = ['folders' => [], 'files' => []];
+
+        if (is_dir($path)) {
+            $items = scandir($path);
+
+            foreach ($items as $item) {
+                if ($item !== '.' && $item !== '..') {
+                    if (is_dir($path . DIRECTORY_SEPARATOR . $item)) {
+                        $result['folders'][] = ['foldername' => $item, 'path' => asset($path . DIRECTORY_SEPARATOR . $item. DIRECTORY_SEPARATOR)];
+                    } else {
+                        $result['files'][] = ['filename' => $item, 'path' => asset($path. DIRECTORY_SEPARATOR . $item)];
+                    }
+                }
+            }
+        }
+
+        return response()->json($result);
+    }
+
+    public static function RemoveFile($filePath){
+
+    }
+
+    public static function AddFile($location, $fileName){
+
+    }
+
+    public static function AddFolder($location, $folderName){
+
+    }
+    public static function RemoveFolder($location, $folderName){
+
     }
 }

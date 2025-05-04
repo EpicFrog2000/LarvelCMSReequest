@@ -139,6 +139,15 @@ return new class extends Migration
             'created_at'=> NOW(),
             'updated_at'=> NOW(),
         ]);
+        DB::table('element_values')->insert([
+            'parentId' => 7,
+            'view_name' => 'home',
+            'order' => 1,
+            'type' => 'media',
+            'value' => 'media/ExampleImage.jpg',
+            'created_at'=> NOW(),
+            'updated_at'=> NOW(),
+        ]);
     }
 
     public function down(): void

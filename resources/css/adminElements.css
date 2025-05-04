@@ -1,0 +1,168 @@
+:root {
+    --primaryWhite: #fbf9fa;
+    --primaryGray: #e2e0e1;
+    --primaryRed: #fd0054;
+    --primaryDarkRed: #a80038;
+    --primaryDark: #2b2024;
+    --secondaryDark: #221a1d;
+    --transition-duration: 0.3s;
+    --transition-function: ease;
+    --box-shadow-color: rgba(0, 0, 0, 1);
+}
+
+.conextMenu {
+    background-color: var(--primaryWhite);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-duration) var(--transition-function);
+    position: fixed;
+    z-index: 1000;
+    box-shadow: 0 0 5vw rgba(0, 0, 0, 1);
+}
+
+.conextMenu.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.window{
+    background-color: var(--primaryWhite);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-duration) var(--transition-function);
+    position: fixed;
+    z-index: 999;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 20vw rgba(0, 0, 0, 1);
+}
+
+.window.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.adminButton{
+    background-color: var(--primaryRed);
+    color: var(--primaryWhite);
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: 500;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+}
+
+.adminButton:hover{
+    background-color: var(--primaryDarkRed);
+    cursor: pointer;
+}
+
+.adminFileItem {
+    background-color: var(--primaryWhite);
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 12px;
+    text-align: center;
+    flex: 1 1 auto;
+    max-width: 19%;
+    min-width: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.adminFileItem:hover{
+    background-color: var(--primaryGray);
+}
+
+.adminFileItem img {
+    flex-grow: 1;
+    object-fit: cover;
+    width: 100%;
+}
+
+.adminFilesContent {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    padding: 5px;
+    gap: 5px;
+}
+
+.admintextInput{
+    border: 1px var(--primaryDark) solid;
+    border-radius: 5px;
+}
+
+.zarzadzaniePlikamiNavbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--primaryDark);
+    color: var(--primaryWhite);
+    padding: 10px;
+}
+
+.zarzadzaniePlikamiWindow{
+    width: 80vw;
+    height: 80vh;
+}
+
+.adminFormLabel{
+
+}
+
+.adminForm{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.adminTab {
+    float: left;
+    background-color: var(--primaryWhite);
+    width: 100%;
+    height: auto;
+}
+
+.adminTab button {
+  display: block;
+  background-color: inherit;
+  color: var(--primaryDark);
+  padding: 10px 16px;
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-duration) var(--transition-function);
+}
+
+.adminTab button:hover {
+  background-color: var(--primaryGray);
+}
+
+.adminTab button.active {
+  background-color: var(--primaryGray);
+}
+
+.adminTabContent {
+  float: left;
+  width: 100%;
+  border-left: none;
+  height: auto;
+}
+
+.adminTabLinks.hidden{
+    display: none;
+}
+
+.adminExitButton{
+    cursor: pointer;
+}
+
+.adminExitButton:hover{
+    background-color: var(--secondaryDark);
+}

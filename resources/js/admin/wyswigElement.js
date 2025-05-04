@@ -21,6 +21,8 @@ export class WyswigElement {
                 return new wyswigVariable(element, type);
             case 'WYSWIGCONTAINER':
                 return new wyswigContainer(element, type);
+            case 'WYSWIGMEDIA':
+                return new wyswigMedia(element, type);
             default:
                 return new WyswigElement(element, type);
         }
@@ -116,3 +118,37 @@ class wyswigContainer extends WyswigElement {
 
     }
 }
+
+class wyswigMedia extends WyswigElement {
+    init() {
+        this.Options = {
+            'UstawieniaElementu': {
+                'Usuń element': this.remove.bind(this),
+                'Edytuj styl': this.editStyle.bind(this)
+            },
+        };
+    }
+
+    getParentElement() {
+        let parentElement = this.element?.parentElement;
+        while (parentElement) {
+            if (['WYSWIGCONTAINER', 'WYSWIGELEMENT'].includes(parentElement.tagName)) {
+                return parentElement;
+            }
+            parentElement = parentElement.parentElement;
+        }
+        return null;
+    }
+
+    editStyle() {
+
+    }
+
+    remove() {
+        this.element?.remove();
+    }
+}
+//Elementy tekstowe
+//Elementy multimedialne
+//Elementy kontenerowe
+//Elementy customowe ???
