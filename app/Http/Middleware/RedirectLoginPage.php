@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Helper;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
 
 class RedirectLoginPage
 {
@@ -30,4 +31,6 @@ class RedirectLoginPage
 
         return $next($request);
     }
+
+
 }

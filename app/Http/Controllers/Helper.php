@@ -174,18 +174,19 @@ class Helper{
         return response()->json($result);
     }
 
-    public static function RemoveFile($filePath){
-
+    public static function deleteDirectory($dir) {
+        $dir = str_replace('\\', DIRECTORY_SEPARATOR, $dir);
+        $items = array_diff(scandir($dir), ['.', '..']);
+        
+        foreach ($items as $item) {
+            $path = $dir . DIRECTORY_SEPARATOR . $item;
+            if (is_dir($path)) {
+                Helper::deleteDirectory($path);
+            } else {
+                unlink($path);
+            }
+        }
+                return rmdir($dir);
     }
 
-    public static function AddFile($location, $fileName){
-
-    }
-
-    public static function AddFolder($location, $folderName){
-
-    }
-    public static function RemoveFolder($location, $folderName){
-
-    }
 }

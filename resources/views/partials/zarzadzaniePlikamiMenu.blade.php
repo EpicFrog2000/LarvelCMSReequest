@@ -19,9 +19,11 @@
     
     <div class="contextMenuOption">
       <button class="adminTabLinks" id="dodajPliki">Dodaj Pliki</button>
+      <input type="file" id="fileInput" multiple style="display: none;" onchange="window.zarzadzaniePlikamiMenu.handleFileSelect(event)">
     </div>
 
     <div class="contextMenuOption">
+      @csrf
       <button class="adminTabLinks" id="usunFolder">Usun Folder</button>
     </div>
 

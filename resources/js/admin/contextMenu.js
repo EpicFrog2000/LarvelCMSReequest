@@ -20,6 +20,9 @@ export class contextMenu{
     }
 
     handleContextMenu(event) {
+        if (event.ctrlKey) {
+            return;
+        }
         event.preventDefault();
         this.hideOptions();
         this.showDefaultOptions();
@@ -31,6 +34,9 @@ export class contextMenu{
     }
 
     handleDocumentClick(event) {
+        if (event.ctrlKey) {
+            return;
+        }
         if (!this.contextMenuElement.contains(event.target)) {
             this.hideContextMenu();
             this.targetElement = undefined;
