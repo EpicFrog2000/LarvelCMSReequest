@@ -17,10 +17,10 @@
 <h3>{{ $Site_Settings['nazwa jakiegoś tam sobie globalnego ustawienia xdd'] ?? 'Brak ustawienia' }}</h3>
 
 <wyswigPageData>
-    @foreach($Containers_Data as $name => $value)
-
-    {!! $value['filled_template'] !!}
-
+    @foreach($Containers_Data as $name => $contenery)
+        @foreach($contenery as $nazwaC => $contenerValue)
+            {!! $contenerValue['filled_template'] !!}
+        @endforeach
     @endforeach
 </wyswigPageData>
 

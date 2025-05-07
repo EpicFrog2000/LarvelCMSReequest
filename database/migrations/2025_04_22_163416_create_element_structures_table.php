@@ -82,6 +82,16 @@ return new class extends Migration
             'created_at'=> NOW(),
             'updated_at'=> NOW(),
         ]);
+
+        
+        DB::table('element_structures')->insert([
+            'dev_name' => 'Container_Default',
+            'view_name' => 'home',
+            'type' => 'container',
+            'order' => 2,
+            'created_at'=> NOW(),
+            'updated_at'=> NOW(),
+        ]);
     }
 
     public function down(): void

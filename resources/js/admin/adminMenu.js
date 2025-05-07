@@ -1,5 +1,6 @@
 import { WyswigElement } from './wyswigElement.js';
 import { contextMenu } from './contextMenu.js';
+import { wyswigEditor } from './wyswig.js';
 
 
 class adminMenu extends contextMenu {
@@ -24,7 +25,7 @@ class adminMenu extends contextMenu {
                 this.showOption(label);
                 Object.keys(options[label]).forEach(optionsDetail => {
                     const button = document.createElement('button');
-                    button.onclick = optionsDetail;
+                    button.onclick = button.onclick = options[label][optionsDetail];;
                     button.style = 'padding: 10px 25px;';
                     button.textContent = optionsDetail;
                     const targetElement = this.contextMenuElement.querySelector(`#${label}`);
@@ -75,5 +76,8 @@ class adminMenu extends contextMenu {
 
 document.addEventListener('DOMContentLoaded', () => {
     window.adminMenu = new adminMenu(document.getElementById('adminMenu'), ['Logout', 'ZarzadzaniePlikami', 'Ustawienia Żylety']);
+    document.getElementById('saveWyswigButton').addEventListener("click", (e) =>{
+        wyswigEditor.zapiszWyswig();
+    });
 });
 

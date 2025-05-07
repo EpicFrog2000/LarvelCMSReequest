@@ -27,4 +27,5 @@ class wyswigController
     public function getFilesAndFolders($path){
         return Helper::getFilesAndFolders($path);
     }
+
 }

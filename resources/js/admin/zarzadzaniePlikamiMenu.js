@@ -90,7 +90,7 @@ class zarzadzaniePlikamiMenu extends contextMenu {
     }
 
     usunPlik($path) {
-
+        
     }
 
     dodajPliki() {

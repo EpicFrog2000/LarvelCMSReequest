@@ -27,12 +27,12 @@
 
                 
         <script>
+
             document.addEventListener('DOMContentLoaded', function () {
-                let StartValues = @json($Containers_Data);
-                let view_name = @json(Route::currentRouteName());
-                //console.log(StartValues);
-                let ModifiedValues = StartValues;
-                //TODO zrobić epicką edycje wyswiga
+                window.StartValues = @json($Containers_Data);
+                window.ModifiedValues =  @json($Containers_Data);
+                window.view_name = @json(Route::currentRouteName());
+
             });
         </script>
     @endif

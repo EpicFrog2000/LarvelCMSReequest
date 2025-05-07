@@ -27,5 +27,5 @@
 
 
 <div style="position: fixed; right: 20px; bottom: 20px;">
-  <button class="adminButton" onclick="zapiszWyswig()">ZAPISZ</button>
+  <button class="adminButton" id="saveWyswigButton">ZAPISZ</button>
 </div>

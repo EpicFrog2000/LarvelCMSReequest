@@ -144,7 +144,7 @@ class zarzadzaniePlikamiWindow extends defaultWindow {
         });
 
         folderElement.addEventListener('contextmenu', (event) => {
-            window.fileAndFolderContextMenu.handleContextMenu(event);
+            window.zarzadzaniePlikamiMenu.handleContextMenu(event);
         });
 
         this.ItemsContainer.appendChild(folderElement);

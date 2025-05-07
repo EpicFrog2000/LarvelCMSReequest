@@ -21,10 +21,15 @@ class Helper{
 
         $array = [];
         foreach ($onlyContainers as $container) {
-            $array[$container->dev_name] = ['values' => Helper::getContainers2($container->id), 'id' => $container->id, 'order' => $container->order, 'template' => Helper::GetElementsTemplate($container->dev_name, $container->id), 'filled_template' => ''];
+            $array[][$container->dev_name] = ['values' => Helper::getContainers2($container->id), 'id' => $container->id, 'order' => $container->order, 'template' => Helper::GetElementsTemplate($container->dev_name, $container->id), 'filled_template' => ''];
         }
-        Helper::GetContainerValues($array);
-        Helper::mergeEverything($array);
+
+        foreach ($array as $key => &$value) {
+
+            Helper::GetContainerValues($value);
+            Helper::mergeEverything($value);
+        }
+        
         return $array;
     }
 
@@ -117,8 +122,8 @@ class Helper{
                         foreach ($container['values'] as $value) {
                             Helper::DodajWartoscDoTemplate($container['filled_template'], $value['filled_template']);
                         }
-                        Helper::removeDefaultsFromTemplateContainers($container['filled_template']);
                     }
+                    Helper::removeDefaultsFromTemplateContainers($container['filled_template']);
                 }
             }
         }
