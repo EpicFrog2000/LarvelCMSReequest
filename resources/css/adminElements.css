@@ -58,6 +58,7 @@
 }
 
 .adminFileItem {
+    pointer-events: auto;
     background-color: var(--primaryWhite);
     border: 1px solid black;
     border-radius: 5px;
@@ -88,6 +89,8 @@
     align-content: center;
     padding: 5px;
     gap: 5px;
+    pointer-events: none;
+    justify-content: space-between;
 }
 
 .admintextInput{

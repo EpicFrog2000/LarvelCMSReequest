@@ -149,6 +149,11 @@ class zarzadzaniePlikamiWindow extends defaultWindow {
 
         this.ItemsContainer.appendChild(folderElement);
     }
+
+    refreshWindow(){
+        this.clearItems();
+        this.setItems(this.currentPath);
+    }
 }
 
 

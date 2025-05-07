@@ -1,39 +1,42 @@
 import { defaultWindow } from './defaultWindow.js';
 
 class zmienNazwePlikuForm extends defaultWindow {
-    init() {   
+    init() {
         super.init?.();
-
-        this.WindowElement.querySelector('#changeNameFormSubmitButton').addEventListener('click', async (e) => {
+        this.FormElement = this.WindowElement.querySelector("#adminForm");
+        this.FormElement.addEventListener("submit", (e) => {
             e.preventDefault();
-            e.stopPropagation();
-            const newName = this.WindowElement.querySelector('#newName').value;
-            const path = this.WindowElement.querySelector('#currentName').value;
-            fetch('/changeName', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-                },
-                body: JSON.stringify({
-                    newName: newName,
-                    path: path
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Success:", data);
-            })
-            .catch(error => {
-                console.error("Error:", error);
-            });
-            return false;
+            this.changeName();
+            this.hideWindowElement();
         });
     }
 
     showWindowElement() {
         super.showWindowElement?.();
         window.zarzadzaniePlikamiMenu.hideContextMenu();
+    }
+
+    changeName() {
+        const formData = new FormData(this.FormElement);
+        fetch("/changeName", {
+            method: "POST",
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+            .then(response => {
+                if (!response.ok) throw new Error("Błąd sieci");
+                return response.json();
+            })
+            .then(data => {
+                console.log("Zmieniono plik");
+                window.zarzadzaniePlikamiWindow.refreshWindow();
+            })
+            .catch(error => {
+                alert.error("Błąd:", error);
+            });
     }
 }
 
