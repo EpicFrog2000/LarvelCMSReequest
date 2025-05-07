@@ -3,7 +3,7 @@ import { defaultWindow } from './defaultWindow.js';
 class zmienNazwePlikuForm extends defaultWindow {
     init() {
         super.init?.();
-        this.FormElement = this.WindowElement.querySelector("#adminForm");
+        this.FormElement = this.WindowElement.querySelector("#changeNameForm");
         this.FormElement.addEventListener("submit", (e) => {
             e.preventDefault();
             this.changeName();
@@ -35,7 +35,8 @@ class zmienNazwePlikuForm extends defaultWindow {
                 window.zarzadzaniePlikamiWindow.refreshWindow();
             })
             .catch(error => {
-                alert.error("Błąd:", error);
+                console.error("Błąd:", error);
+                alert("Wystąpił błąd: " + error.message);
             });
     }
 }

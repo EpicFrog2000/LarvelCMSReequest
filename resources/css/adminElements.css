@@ -25,7 +25,7 @@
     pointer-events: auto;
 }
 
-.window{
+.window {
     background-color: var(--primaryWhite);
     opacity: 0;
     pointer-events: none;
@@ -36,7 +36,14 @@
     left: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 0 0 20vw rgba(0, 0, 0, 1);
+
+    max-width: 100vw;
+    max-height: 100vh;
+    overflow: hidden; /* żeby nic nie wystawało */
+    display: flex;
+    flex-direction: column;
 }
+
 
 .window.visible {
     opacity: 1;
@@ -65,32 +72,33 @@
     padding: 5px;
     font-size: 12px;
     text-align: center;
-    flex: 1 1 auto;
-    max-width: 19%;
+    flex: 0 1 19%;     /* NIE rośnie ponad 19%, ale może się zmniejszać */
     min-width: 100px;
+    aspect-ratio: 1;   /* zachowuje proporcje kwadratu */
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
 }
 
-.adminFileItem:hover{
-    background-color: var(--primaryGray);
-}
 
-.adminFileItem img {
-    flex-grow: 1;
-    object-fit: cover;
-    width: 100%;
+.zarzadzaniePlikamiWindow{
+    width: calc(5 * 150px + 6 * 5px);
+    height: calc(5 * 150px + 6 * 5px + 50px);
+    display: flex;
+    flex-direction: column;
 }
 
 .adminFilesContent {
+    flex: 1;
+    overflow-y: auto;
     display: flex;
     flex-wrap: wrap;
-    align-content: center;
-    padding: 5px;
     gap: 5px;
+    padding: 5px;
+    box-sizing: border-box;
     pointer-events: none;
-    justify-content: space-between;
+    justify-content: flex-start;
+    align-content: flex-start;
 }
 
 .admintextInput{
@@ -105,12 +113,21 @@
     background-color: var(--primaryDark);
     color: var(--primaryWhite);
     padding: 10px;
+    height: 50px;
+    box-sizing: border-box;
 }
 
-.zarzadzaniePlikamiWindow{
-    width: 80vw;
-    height: 80vh;
+.adminFileItem:hover{
+    background-color: var(--primaryGray);
 }
+
+.adminFileItem img {
+    flex-grow: 1;
+    object-fit: cover;
+    width: 100%;
+}
+
+
 
 .adminFormLabel{
 

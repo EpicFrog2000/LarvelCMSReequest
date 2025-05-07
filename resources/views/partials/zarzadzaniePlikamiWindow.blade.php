@@ -6,5 +6,6 @@
         <button class="adminExitButton" onclick="window.zarzadzaniePlikamiWindow.hideWindowElement()">X</button>
     </nav>
     <div class="adminFilesContent" id="adminFilesContent">
+        <!-- items here -->
     </div>
 </div>

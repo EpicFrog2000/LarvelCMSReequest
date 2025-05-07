@@ -105,19 +105,17 @@ Route::post('/changeName', function (Request $request) {
     } elseif (is_file($localPath)) {
         $extension = pathinfo($localPath, PATHINFO_EXTENSION);
         $baseName = pathinfo($newName, PATHINFO_FILENAME);
-        $newFilePath = $directory . DIRECTORY_SEPARATOR . $baseName . '.' . $extension;
-        $counter = 1;
 
+        $dotExtension = $extension !== '' ? '.' . $extension : '';
+        $newFilePath = $directory . DIRECTORY_SEPARATOR . $baseName . $dotExtension;
+
+        $counter = 1;
         while (file_exists($newFilePath)) {
-            $newFilePath = $directory . DIRECTORY_SEPARATOR . $baseName . '_' . $counter . '.' . $extension;
+            $newFilePath = $directory . DIRECTORY_SEPARATOR . $baseName . '_' . $counter . $dotExtension;
             $counter++;
         }
 
         rename($localPath, $newFilePath);
-    } else {
-        return response()->json([
-            'response' => 'BadPath: ' . $path
-        ], 500);
     }
 
     return response()->json([
@@ -181,7 +179,7 @@ Route::post('/uploadFiles', function (Request $request) {
     }
 
     $request->validate([
-        'files.*' => 'required|file|mimes:jpg,png,jpeg,pdf|max:10240',
+        'files.*' => 'required|file|max:10240',
     ]);
 
     foreach ($request->file('files') as $file) {

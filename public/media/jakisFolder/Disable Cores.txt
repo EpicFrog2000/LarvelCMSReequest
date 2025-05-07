@@ -1,0 +1,2 @@
+powercfg /setacvalueindex 0fc7b3c5-4bff-4492-acec-aa60198e49c1 SUB_PROCESSOR IDLEDISABLE 1 
+powercfg /setactive 0fc7b3c5-4bff-4492-acec-aa60198e49c1
