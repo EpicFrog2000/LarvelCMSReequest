@@ -74,31 +74,7 @@ class wyswigVariable extends WyswigElement {
         if(!id){
             alert('Nie znaleziono id elementu, idź i pobij Norberta');
         }
-
-        function findAndRemove(obj) {
-            if (obj && Array.isArray(obj.values)) {
-                const index = obj.values.findIndex(v => v.id == id);
-                if (index !== -1) {
-                    obj.values.splice(index, 1);
-                    return true;
-                }
-            }
-
-            for (const key in obj) {
-                if (typeof obj[key] === 'object') {
-                    const result = findAndRemove(obj[key]);
-                    if (result) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-        if (findAndRemove(window.ModifiedValues)) {
-            this.parentElement?.parentNode?.removeChild(this.parentElement);
-        } else {
-            alert("Nie znaleziono w ModifiedValues");
-        }
+        this.parentElement?.parentNode?.removeChild(this.parentElement);
         window.adminMenu.hideContextMenu();
     }
 

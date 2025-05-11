@@ -32,6 +32,7 @@
                 window.StartValues = @json($Containers_Data);
                 window.ModifiedValues =  @json($Containers_Data);
                 window.view_name = @json(Route::currentRouteName());
+                console.log(window.StartValues);
 
             });
         </script>
