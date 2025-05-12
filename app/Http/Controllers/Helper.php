@@ -129,23 +129,35 @@ class Helper{
         }
     }
 
-    private static function ZamienWartosciWTemplate($template, $values){
-        foreach($values as $key => $value){
-            
-            if($value['type'] == 'text'){
-                $template = preg_replace('/<wyswigvariable.*?/s', "<wyswigvariable data-id=\"{$key}\"", $template);
-                $template = preg_replace('/DEFAULT VALUE/', $value['value'], $template, 1);
-            }else if($value['type'] == 'media'){
-                $template = preg_replace('/>/', "data-id=\"{$key}\">", $template);
-                if(!empty($value['value'])){
-                    $template = preg_replace('/media\/NoImage\.jpg/', asset($value['value']), $template, 1);
-                }else{
-                    $template = preg_replace('/media\/NoImage\.jpg/', asset('media/NoImage.jpg'), $template, 1);
-                }
+    private static function ZamienWartosciWTemplate($template, $values) {
+        foreach($values as $key => $value) {
+            if ($value['type'] === 'text') {
+                // Szukamy konkretnego <wyswigvariable> bez data-id i przypisujemy mu aktualny key
+                $template = preg_replace_callback(
+                    '/<wyswigvariable(?![^>]*data-id)[^>]*>(.*?)<\/wyswigvariable>/s',
+                    function($matches) use ($key, $value) {
+                        return "<wyswigvariable data-id=\"{$key}\">" . htmlspecialchars($value['value']) . "</wyswigvariable>";
+                    },
+                    $template,
+                    1
+                );
+            } else if ($value['type'] === 'media') {
+                // Szukamy pierwszego <img> z NoImage.jpg i przypisujemy mu data-id oraz podmieniamy src
+                $template = preg_replace_callback(
+                    '/<img(?![^>]*data-id)[^>]*src=["\']([^"\']*media\/NoImage\.jpg)["\'][^>]*>/s',
+                    function($matches) use ($key, $value) {
+                        $src = !empty($value['value']) ? asset($value['value']) : asset('media/NoImage.jpg');
+                        $newTag = preg_replace('/src=["\'][^"\']*["\']/', "src=\"{$src}\"", $matches[0]);
+                        return preg_replace('/<img/', "<img data-id=\"{$key}\"", $newTag, 1);
+                    },
+                    $template,
+                    1
+                );
             }
         }
         return $template;
     }
+
 
 
     
