@@ -10,14 +10,17 @@ return new class extends Migration
     {
         Schema::create('element_structures', function (Blueprint $table) {
             $table->id();
-            $table->string('dev_name')->default(null);
-            $table->string('view_name')->default(null);
-            $table->integer('parentId')->nullable(true)->default(null);
-            $table->string('type')->default(null);
-            $table->integer('order')->default(null);
-            $table->json('CustomStyleOptions')->nullable(true)->default(null);
+            $table->string('dev_name')->nullable();
+            $table->string('view_name')->nullable();
+            $table->unsignedBigInteger('parentId')->nullable();
+            $table->string('type')->nullable();
+            $table->integer('order')->nullable();
+            $table->json('CustomStyleOptions')->nullable();
             $table->timestamps();
+
+            $table->foreign('parentId')->references('id')->on('element_structures')->onDelete('cascade');
         });
+
 
         DB::table('element_structures')->insert([
             'dev_name' => 'Container_Default',

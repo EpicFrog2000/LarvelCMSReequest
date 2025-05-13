@@ -1,5 +1,3 @@
-
-// TODO DONT MOVE TO route
 <div class="zmienNazwePlikuForm window" id="zmienNazwePlikuForm">
   <form class="adminForm" id="changeNameForm">
     @csrf

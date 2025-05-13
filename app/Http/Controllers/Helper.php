@@ -158,9 +158,6 @@ class Helper{
         return $template;
     }
 
-
-
-    
     private static function DodajWartoscDoTemplate(&$template, $value){
         $template = str_replace('DEFAULT VALUE', $value.'DEFAULT VALUE', $template);
     }

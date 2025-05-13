@@ -1,4 +1,6 @@
 <?php
+// TODO trzeba będzie zrobić tranzakcjie
+
 
 namespace App\Models;
 
@@ -26,28 +28,64 @@ class element_structures extends Model
         'view_name' => 'string',
     ];
 
-    protected function UpdateElement($newValue, $id) {
-        $Element_Structure = \App\Models\element_structures::find($id);
+    protected function UpdateElement($id, $order, $parentId, $dev_name, $view_name){
+        try {
+            $Element_Structure = \App\Models\element_structures::find($id);
+            if ($Element_Structure) {
+                if($order){
+                    $Element_Structure->order = $order;
+                }
 
-        if ($Element_Structure) {
-            $Element_Structure->values = $newValue;
-            $Element_Structure->save();
+                if($parentId){
+                    $Element_Structure->parentId = $parentId;
+                }
+
+                if($dev_name){
+                    $Element_Structure->dev_name = $dev_name;
+                }
+
+                if($view_name){
+                    $Element_Structure->view_name = $view_name;
+                }
+
+                return ['success' => true, 'message' => 'Element updated successfully'];
+            }
+            return ['success' => false, 'message' => 'Element not found'];
+        } catch (\Exception $e) {
+            return ['success' => false, 'message' => 'Error occurred: ' . $e->getMessage()];
         }
     }
-    protected function RemoveElement($id){
-        $Element_Structure = \App\Models\element_structures::find($id);
-        if ($Element_Structure) {
-            $Element_Structure->delete();
+
+    protected static function RemoveElements($elements){
+        try {
+            foreach ($elements as $element) {
+                $Element_Structure = \App\Models\element_structures::find($element['id']);
+                if ($Element_Structure) {
+                    $Element_Structure->delete();
+                } else {
+                    throw new \Exception('Element with ID ' . $element['id'] . ' not found');
+                }
+            }
+            return ['success' => true];
+        } catch (\Exception $e) {
+            return ['success' => false, 'message' => 'Error occurred: ' . $e->getMessage()];
         }
     }
-    protected function AddElement($newValue, $dev_name, $view_name, $parentId, $type, $order) {
-        \App\Models\element_structures::create([
-            'parentId' => $parentId,
-            'type' => $type,
-            'order' => $order,
-            'values' => $newValue,
-            'dev_name' => $dev_name,
-            'view_name' => $view_name,
-        ]);
+
+    protected function AddElement($dev_name, $view_name, $parentId, $type, $order) {
+        try {
+            \App\Models\element_structures::create([
+                'parentId' => $parentId,
+                'type' => $type,
+                'order' => $order,
+                'dev_name' => $dev_name,
+                'view_name' => $view_name,
+            ]);
+            return ['success' => true, 'message' => 'Element added successfully'];
+        } catch (\Exception $e) {
+            return ['success' => false, 'message' => 'Error occurred: ' . $e->getMessage()];
+        }
     }
+
+    // TODO przerobić updaty i addy na array a nie pojedyncze
 }

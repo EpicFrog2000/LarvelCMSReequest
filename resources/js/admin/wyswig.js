@@ -268,8 +268,6 @@ export class wyswigEditor {
         }
 
         function compare(obj1, obj2) {
-
-
             const map1 = new Map(obj1.map(item => [item.id, item]));
             const map2 = new Map(obj2.map(item => [item.id, item]));
 
@@ -305,16 +303,31 @@ export class wyswigEditor {
         console.log("this.elements_changes: ", elements_changes);
         console.log("this.variable_changes: ", variable_changes);
         
-        // O KURWA CHYBA DZIAŁA XDDDDD
-        // TODO więcej wartości się będzie zmieniało 
-        // TODO dobra teraz jebane kurwe  modyfikacje w bazie
+        this.saveWyswig(BIGelement_changes, elements_changes, variable_changes);
 
-        // NO KURWA FAKTYCZNIE CHYB ADZIAŁA ALE PIĘKNE AŻ MI SIE CHCE PŁAKAĆ :*******
-        // te kaczuchy na moim biurku to jednak kerują trochę tymi swoimi żółtymi mordami
+    }
+
+    static saveWyswig(BIGelement_changes, elements_changes, variable_changes) {
+        return fetch('/saveWyswig', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            },
+            body: JSON.stringify({ BIGelement_changes, elements_changes, variable_changes })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            return true;
+        })
+        .catch(error => {
+            console.error('Error fetching templates:', error);
+            return false;
+        });
     }
 }
 
 
-// TODO dodać dev/_name jako klase do elementu w sensie te z bazy omegalul
 // japierole Andrzej robił to 5 lat?
 // ale się wjebałem w bagno...

@@ -21,7 +21,14 @@ class wyswigController
     }
 
     public function getWyswigTemplate($dev_name){
-        return Helper::GetElementsTemplate($dev_name);
+        $template = '';
+        if (!File::exists(public_path('modules/' . $dev_name . '.blade.html'))) {
+            $template = "BRAK PLIKU TEMPLATE DLA TEGO ELEMENTU";
+        } else {
+            $template = file_get_contents(public_path('modules/' . $dev_name . '.blade.html'));
+        }
+
+        return $template;
     }
 
     public function getFilesAndFolders($path){

@@ -1,4 +1,5 @@
 <?php
+use GuzzleHttp\Psr7\Message;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\wyswigController;
 use App\Http\Controllers\adminLoginController;
@@ -237,6 +238,42 @@ Route::post('/createNewFolder', function (Request $request) {
     ], 200);
 
 })->name('createNewFolder');
+
+Route::post('/saveWyswig', function (Request $request) {
+    if (!session('_auth')) {
+        abort(403);
+    }
+
+    $BIGelement_changes = $request->input('BIGelement_changes');
+    $elements_changes = $request->input('elements_changes');
+    $variable_changes = $request->input('variable_changes');
+
+    try{
+        DB::beginTransaction();
+        if($BIGelement_changes){
+            $elements = $BIGelement_changes['deleted'];
+            $response = \App\Models\element_structures::RemoveElements($elements);
+
+            if(!$response['success']){
+                DB::rollBack();
+                return $response;
+            }
+            
+        }
+
+        DB::commit();
+        return response()->json(['success' => true], 200);
+    }catch(\Exception $e){
+        DB::rollBack();
+        return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+
+    }
+
+})->name('saveWyswig');
+
+
+
+
 
 // DEPR ?
 Route::get('/wyswig-element/{dev_name}', [wyswigController::class, 'getWyswigElement'])->name('getwyswigelement');

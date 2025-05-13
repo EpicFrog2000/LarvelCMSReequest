@@ -23,8 +23,11 @@
         @vite(['resources/js/admin/zarzadzaniePlikamiMenu.js'])
 
         @include('partials.zmienNazwePlikuForm')
-        @vite(entrypoints: ['resources/js/admin/zmienNazwePlikuForm.js'])
+        @vite( ['resources/js/admin/zmienNazwePlikuForm.js'])
 
+        
+        @include('partials.elementStyleSettingsWindow')
+        @vite( ['resources/js/admin/elementStyleSettingsWindow.js'])
                 
         <script>
 

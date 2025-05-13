@@ -186,3 +186,14 @@
 .adminExitButton:hover{
     background-color: var(--secondaryDark);
 }
+
+.elementStyleSettingsWindow{
+    position: fixed;
+    background-color: var(--primaryWhite);
+    width: 300px;
+    height: 100vh;
+    left: auto;
+    right: 0;
+    transform: none;
+    top: 0;
+}
