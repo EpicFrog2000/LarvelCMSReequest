@@ -4,45 +4,107 @@
     <hr>
     <h1>Layout</h1>
     <div class="layout-settings-container">
-        <div class="options-row-container">
+        <div style="display: flex; flex-direction: column;">
             <h2>Display:</h2>
-            <div class="options-row-buttons" id="layout-options-main-buttons">
-                <button class="settings-option-button" id="block-button">
+            <div class="admin-tabsmenu-row-buttons" id="layout-options-buttons">
+                <button class="admin-tab-button" id="block-button">
                     Block
                 </button>
-                <button class="settings-option-button" id="flex-button">
+                <button class="admin-tab-button" id="flex-button">
                     Flex
                 </button>
-                <button class="settings-option-button" id="grid-button">
+                <button class="admin-tab-button" id="grid-button">
                     Grid
                 </button>
-                <button class="settings-option-button" id="none-button">
+                <button class="admin-tab-button" id="none-button">
                     None
                 </button>
             </div>
         </div>
-
-        <div class="layout-content-container" id="layout-options-main-tabs">
-            <div class="layout-settings-content layout-content-options-block" id="block-settings">
-
+        
+        <div class="admin-tabs-content" id="layout-tabs-content">
+            <div class="admin-tab-content" id="block-tab">
             </div>
-            <div class="layout-settings-content layout-content-options-flex" id="flex-settings">
-                <div class="options-row-container">
+
+            <div class="admin-tab-content" id="flex-tab">
+
+                <div style="display: flex; flex-direction: row;">
                     <h2>Direction:</h2>
-                    <div class="options-row-buttons">
-                        <button class="settings-option-button">
-                            col
-                        </button>
-                        <button class="settings-option-button">
-                            row
-                        </button>
-                        <button class="settings-option-button">
-                            lr-wd
-                        </button>
-                        <button class="settings-option-button">
-                            Other
-                        </button>
+                    <select name="Direction" id="flex-direction">
+                        <option value="Column">Column</option>
+                        <option value="Row">Row</option>
+                        <option value="Left-Right-wrapDown">Left-Right-wrapDown</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; flex-direction: row;">
+                    <h2>Align:</h2>
+                    <div style="display: flex; flex-direction: column;">
+                        <div class="admin-tabs-content" id="flex-direction-tabs-content">
+                            <div class="admin-tab-content" id="Column-tab">
+                                <div style="display: flex; flex-direction: row;">
+                                    <h2>X:</h2>
+                                    <select name="x" id="x">
+                                        <option value="left">left</option>
+                                        <option value="centrer">centrer</option>
+                                        <option value="right">right</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+
+                                <div style="display: flex; flex-direction: row;">
+                                    <h2>Y:</h2>
+                                    <select name="y" id="y">
+                                        <option value="Column">Column</option>
+                                        <option value="Row">Row</option>
+                                        <option value="Left-Right-wrapDown">Left-Right-wrapDown</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="admin-tab-content" id="Row-tab">
+                                <div style="display: flex; flex-direction: row;">
+                                    <h2>Y:</h2>
+                                    <select name="y" id="y">
+                                        <option value="Column">Column</option>
+                                        <option value="Row">Row</option>
+                                        <option value="Left-Right-wrapDown">Left-Right-wrapDown</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div style="display: flex; flex-direction: row;">
+                                    <h2>X:</h2>
+                                    <select name="x" id="x">
+                                        <option value="left">left</option>
+                                        <option value="centrer">centrer</option>
+                                        <option value="right">right</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: row;">
+                            <h2>gap:</h2>
+                            <input type="text" name="gap" value="0px" placeholder="0px">
+                        </div>
                     </div>
+                </div>
+            </div>
+
+
+            <div class="admin-tab-content" id="grid-tab">
+                <div style="display: flex; flex-direction: row; width: 100%; max-width: 100%;">
+                    <h2>grid:</h2>
+                    <input type="number" name="columns" value="1" placeholder="1" min="1" style="width: 30%;">
+                    <input type="number" name="rows" value="1" placeholder="1" min="1" style="width: 30%;">
+                </div>
+                <div style="display: flex; flex-direction: row;">
+                    <h2>Direction:</h2>
+                    <select name="direction" id="direction">
+                        <option value="Horizontal">Horizontal</option>
+                        <option value="Vertical">Vertical</option>
+                    </select>
                 </div>
 
 
@@ -50,12 +112,12 @@
 
 
 
-            </div>
-            <div class="layout-settings-content layout-content-options-grid" id="grid-settings">
 
             </div>
-            <div class="layout-settings-content layout-content-none" id="none-settings">
 
+
+
+            <div class="admin-tab-content" id="none-tab">
             </div>
         </div>
 
@@ -86,6 +148,20 @@
 </div>
 
 <style>
+    .admin-tabsmenu-row-buttons{
+        display: flex;
+        flex-direction: row;
+    }
+
+    .admin-tab-button{
+        background-color: grey;
+        padding: 5px;
+    }
+
+    .admin-tab-button:hover{
+        background-color: lightgray;
+    }
+
     .elementStyleSettingsWindow{
         display: flex;
         flex-direction: column;
@@ -105,57 +181,68 @@
         
     }
 
-    .options-row-buttons{
-        display: flex;
-        flex-direction: row;
-        gap: 5px;
-    }
-
-    .layout-content-container{
+    .admin-tabs-content{
         display: grid;
     }
 
-
-    .layout-settings-content{
+    .admin-tab-content{
         grid-row: 1 / 1;
         grid-column: 1 / 1;
         display: none;
-        flex-direction: column;
+        float: left;
     }
 
-    .layout-settings-content.visible{
+    .admin-tab-content.visible{
         display: flex;
-    }
-
-    .settings-option-button{
-        background-color: grey;
-        padding: 5px;
-    }
-
-    
-    .settings-option-button:hover{
-        background-color: lightgray;
-        padding: 5px;
+        flex-direction: column;
+        align-items: start;
     }
 
 
 </style>
 
 <script>
-    const layout_options_main_buttons = document.getElementById('layout-options-main-buttons').children;
-    const layout_options_main_tabs = document.getElementById('layout-options-main-tabs').children;
+    
 
-    Array.from(layout_options_main_buttons).forEach(button => {
-        button.addEventListener('click', () => {
-            let chosen_tab = document.getElementById(button.id.split('-')[0] + "-settings");
+
+    initTabswithButtons('layout-options-buttons', 'layout-tabs-content');
+    initTabswithSelect('flex-direction', 'flex-direction-tabs-content');
+
+    
+    function initTabswithButtons(buttons_container_id, tabs_container_id){
+        const buttons = document.getElementById(buttons_container_id).children;
+        const tabs = document.getElementById(tabs_container_id).children;
+        Array.from(buttons).forEach(button => {
+            button.addEventListener('click', () => {
+                let chosen_tab = document.getElementById(button.id.split('-')[0] + "-tab");
+                chosen_tab.classList.add('visible');
+                Array.from(tabs).forEach(tab => {
+                    if(tab != chosen_tab){
+                        tab.classList.remove('visible');
+                    }
+                });
+            });
+        });
+    }
+
+    function initTabswithSelect(select_element_id, tabs_container_id){
+        const select_element = document.getElementById(select_element_id);
+        const tabs = document.getElementById(tabs_container_id).children;
+        select_element.addEventListener("change", function () {
+            const selectedValue = this.value;
+            let chosen_tab = document.getElementById(selectedValue.split('-')[0] + "-tab");
             chosen_tab.classList.add('visible');
-            Array.from(layout_options_main_tabs).forEach(tab => {
+            Array.from(tabs).forEach(tab => {
                 if(tab != chosen_tab){
                     tab.classList.remove('visible');
                 }
             });
         });
-    });
+    }
+
+
+
+
 
 
 
