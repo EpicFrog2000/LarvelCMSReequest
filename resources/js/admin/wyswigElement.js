@@ -66,7 +66,8 @@ class wyswigVariable extends WyswigElement {
     }
 
     editStyle() {
-        
+        window.elementStyleSettingsWindow.showWindowElement(this.element);
+        window.adminMenu.hideContextMenu();
     }
 
     remove() {
@@ -125,7 +126,8 @@ class wyswigElement extends WyswigElement {
 
 
     editStyle() {
-        
+        window.elementStyleSettingsWindow.showWindowElement(this.element);
+        window.adminMenu.hideContextMenu();
     }
 
     remove() {
@@ -153,7 +155,7 @@ class wyswigContainer extends WyswigElement {
                 'Edytuj styl': this.editStyle.bind(this), //edytuje styl tego elementu
                 'Dodaj Kontenter w': this.addContainerIn.bind(this), // Dodaje w tym elementem nowy kontener
                 'Dodaj Kontenter pod': this.addContainer.bind(this), // Dodaje pod tym elementem nowy kontener
-                'Dodaj Element w': this.addElementIN.bind(this), // Dodaje w tym elementem nowy element
+                'Dodaj Element w': this.addElementIn.bind(this), // Dodaje w tym elementem nowy element
                 'Dodaj Element pod': this.addElement.bind(this), // Dodaje pod tym elementem nowy element
                 'Move Element': this.moveElement.bind(this), // Pokazuje może okienko do ruszania elementem?
             },
@@ -176,7 +178,8 @@ class wyswigContainer extends WyswigElement {
     }
 
     editStyle() {
-        
+        window.elementStyleSettingsWindow.showWindowElement(this.element);
+        window.adminMenu.hideContextMenu();
     }
 
     remove() {
@@ -230,7 +233,8 @@ class wyswigMedia extends WyswigElement {
     }
 
     editStyle() {
-        
+        window.elementStyleSettingsWindow.showWindowElement(this.element);
+        window.adminMenu.hideContextMenu();
     }
 
     remove() {

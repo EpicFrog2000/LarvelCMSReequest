@@ -8,19 +8,17 @@ class adminLoginController
 {
     public function showForm()
     {
-        return view('admin.login'); // Pointing to the Blade view for the login form
+        return view('admin.login');
     }
 
-    // Method to handle login form submission
     public function submitForm(Request $request)
     {
-        // Validate the form inputs
         $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        $user = DB::table('users')->where('email', $validated['email'])->first();
+        $user = DB::table('users')->where('email', $validated['email'])->where('password', $validated['password'])->first();
 
         if ($user) {
             session(['_auth' => true]);

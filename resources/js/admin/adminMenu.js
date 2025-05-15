@@ -16,6 +16,14 @@ class adminMenu extends contextMenu {
         this.showOptions();
     }
 
+    handleDocumentClick(event) {
+        if (!window.elementStyleSettingsWindow.WindowElement.classList.contains('visible')) {
+            if (!window.zmienNazwePlikuForm.WindowElement.contains(event.target)) {
+                super.handleDocumentClick?.(event);
+            }
+        }
+    }
+
     showOptions() {
         this.clearDropdownOptionsContent();
         this.showDefaultOptions();
@@ -38,7 +46,6 @@ class adminMenu extends contextMenu {
         }
     }
 
-
     getWyswigTargetElement(targetElement) {
         if (targetElement) {
             let type = targetElement.tagName;
@@ -52,10 +59,10 @@ class adminMenu extends contextMenu {
                     if (!tmptargetElement.parentElement) {
                         return undefined;
                     }
-                    tmptargetElement = tmptargetElement.parentElement;
                     if (tmptargetElement.tagName == 'WYSWIGELEMENT' || tmptargetElement.tagName == 'WYSWIGCONTAINER') {
                         return {element: tmptargetElement, type: tmptargetElement.tagName};
                     }
+                    tmptargetElement = tmptargetElement.parentElement;
                 }
             }
         } else {
