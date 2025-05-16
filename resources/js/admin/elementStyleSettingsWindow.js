@@ -4,56 +4,6 @@ import { defaultWindow } from './defaultWindow.js';
 class elementStyleSettingsWindow extends defaultWindow {
     init() {
         super.init?.();
-
-        let layout_options_buttons = new buttonsOption('layout-options-buttons', 'display', this.WindowElement);
-        let flex_direction = new selectOption('flex-direction', 'flex-direction', this.WindowElement);
-        let column_y = new selectOption('column-y', 'justify-content', this.WindowElement);
-        let column_x = new selectOption('column-x', 'align-items', this.WindowElement);
-        let row_x = new selectOption('row-x', 'align-items', this.WindowElement);
-        let row_y = new selectOption('row-x', 'justify-content', this.WindowElement);
-        let grid_x = new selectOption('grid-x', 'justify-items', this.WindowElement);
-        let grid_y = new selectOption('grid-y', 'align-items', this.WindowElement);
-        let flex_c_gap_columns = new inputOption('column-gap-columns', 'grid-column-gap', this.WindowElement);
-        let flex_c_gap_rows = new inputOption('column-gap-rows', 'grid-row-gap', this.WindowElement);
-        let flex_r_gap_columns = new inputOption('row-gap-columns', 'grid-column-gap', this.WindowElement);
-        let flex_r_gap_rows = new inputOption('row-gap-rows', 'grid-row-gap', this.WindowElement);
-        function handleColumsChange(value) {
-            value = parseInt(value);
-            if (value < 1) return;
-            const val = Array(value).fill('1fr').join(' ');
-            window.elementStyleSettingsWindow.changeProperty('grid-template-columns', val);
-        }
-        let grid_columns = new customInputOption('columnsInput', 'grid-template-columns', this.WindowElement, handleColumsChange);
-        function handleRowsChange(value) {
-            value = parseInt(value);
-            if (value < 1) return;
-            const val = Array(value).fill('1fr').join(' ');
-            window.elementStyleSettingsWindow.changeProperty('grid-template-rows', val);
-        }
-        let grid_rows = new customInputOption('rowsInput', 'grid-template-rows', this.WindowElement, handleRowsChange);
-        let grid_flow = new selectOption('grid-direction', 'grid-auto-flow', this.WindowElement);
-        let grid_gap_columns = new inputOption('grid-gap-columns', 'grid-column-gap', this.WindowElement);
-        let grid_gap_rows = new inputOption('grid-gap-rows', 'grid-row-gap', this.WindowElement);
-
-        let margin_left = new inputOption('margin-left', 'margin-left', this.WindowElement);
-        let margin_right = new inputOption('margin-right', 'margin-right', this.WindowElement);
-        let margin_top = new inputOption('margin-top', 'margin-top', this.WindowElement);
-        let margin_bottom = new inputOption('margin-bottom', 'margin-bottom', this.WindowElement);
-        let padding_left = new inputOption('padding-left', 'padding-left', this.WindowElement);
-        let padding_right = new inputOption('padding-right', 'padding-right', this.WindowElement);
-        let padding_top = new inputOption('padding-top', 'padding-top', this.WindowElement);
-        let padding_bottom = new inputOption('padding-bottom', 'padding-bottom', this.WindowElement);
-
-
-        // TODO add the rest
-        // ależ kurwa mam głód alkocholowy :cccccc
-
-
-        this.options = [layout_options_buttons, flex_direction, column_y, column_x, row_x, row_y, grid_x, grid_y, grid_columns, grid_rows]; // TODO add the rest
-
-        this.initTabswithButtons('layout-options-buttons', 'layout-tabs-content', [flex_direction]);
-        this.initTabswithSelect('flex-direction', 'flex-direction-tabs-content', [column_y, column_x, row_x, row_y, grid_x, grid_y, flex_c_gap_columns, flex_c_gap_rows, flex_r_gap_columns, flex_r_gap_rows , grid_columns, grid_rows, grid_flow, grid_gap_columns, grid_gap_rows]);
-    
     }
 
     showWindowElement(){
@@ -138,141 +88,247 @@ class elementStyleSettingsWindow extends defaultWindow {
     }
 }
 
-class selectOption{
-    constructor(elementId, styleName, WindowElement) {
-        this.SettingsWindowElement = WindowElement;
-        this.element = this.SettingsWindowElement.querySelector(`#${elementId}`);
-        this.styleName = styleName;
-        this.init();
-    }
-
-    init(){
-        this.element.addEventListener("change", () => {
-            window.elementStyleSettingsWindow.changeProperty(this.styleName, this.element.value);
-        });
-    }
-
-    setDefaultValues(){
-        this.element.value = this.element.options[0].value;
-        window.elementStyleSettingsWindow.changeProperty(this.styleName, this.element.value);
-    }
-
-    setVisualDefaultValues(){
-        this.element.value = this.element.options[0].value;
-    }
-
-    setValue(value){
-        this.element.value = value;
-    }
-}
-
-class buttonsOption{
-    constructor(buttonscontainerId, styleName, WindowElement) {
-        this.SettingsWindowElement = WindowElement;
-        this.buttonscontainer = this.SettingsWindowElement.querySelector(`#${buttonscontainerId}`);
-        this.styleName = styleName;
-        this.init();
-    }
-
-    init(){
-        Array.from(this.buttonscontainer.children).forEach(button => {
-            button.addEventListener("click", () => {
-                window.elementStyleSettingsWindow.changeProperty(this.styleName, button.value);
-            });
-        });
-    }
-
-    setDefaultValues(){
-        this.buttonscontainer.children.forEach(button => {
-            button.classList.remove('selected');
-        });
-        this.buttonscontainer.children[0].classList.add('selected');
-        window.elementStyleSettingsWindow.changeProperty(this.styleName, this.buttonscontainer.children[0].value);
-    }
-
-    setVisualDefaultValues(){
-        this.buttonscontainer.children.forEach(button => {
-            button.classList.remove('selected');
-        });
-        this.buttonscontainer.children[0].classList.add('selected');
-    }
-
-    setValue(id, value){
-        this.buttonscontainer.getElementById(id).value = value;
-    }
-}
-
-class inputOption{
-    constructor(elementId, styleName, WindowElement) {
-        this.SettingsWindowElement = WindowElement;
-        this.element = this.SettingsWindowElement.querySelector(`#${elementId}`);
-        this.styleName = styleName;
-        this.init();
-    }
-
-    init(){
-        this.element.addEventListener("input", () => {
-            if(this.element.type=="text"){
-                const value = this.element.value.trim();
-                if (this.isValidCssSize(value) || value == "auto") {
-                    window.elementStyleSettingsWindow.changeProperty(this.styleName, value);
-                    this.element.style.borderColor = '';
-                } else {
-                    this.element.style.borderColor = 'red';
-                }
-            }
-        });
-    }
-
-    setDefaultValues(){
-        this.element.value = this.element.placeholder;
-        window.elementStyleSettingsWindow.changeProperty(this.styleName, this.element.value);
-    }
-
-    setVisualDefaultValues(){
-        this.element.value = this.element.placeholder;
-    }
-
-    setValue(value){
-        this.element.value = value;
-    }
-
-    isValidCssSize(value) {
-        return /^-?\d+(\.\d+)?(px|em|rem|%|vw|vh|fr|ch|ex|vmin|vmax)$/.test(value.trim());
-    }
-}
-
-class customInputOption{
-    constructor(elementId, styleName, WindowElement, customHandleFunction) {
-        this.SettingsWindowElement = WindowElement;
-        this.element = this.SettingsWindowElement.querySelector(`#${elementId}`);
-        this.styleName = styleName;
-        this.customHandleFunction = customHandleFunction;
-        this.init();
-    }
-
-    init(){
-        this.element.addEventListener("input", () => {
-            this.customHandleFunction(this.element.value);
-        });
-    }
-
-    setDefaultValues(){
-        this.element.value = this.element.placeholder;
-        window.elementStyleSettingsWindow.changeProperty(this.styleName, this.element.value);
-    }
-
-    setVisualDefaultValues(){
-        this.element.value = this.element.placeholder;
-    }
-
-    setValue(value){
-        this.element.value = value;
-    }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     window.elementStyleSettingsWindow = new elementStyleSettingsWindow(document.getElementById('elementStyleSettingsWindow'));
+
+
+    //jakoś inaczej trzeba bedzie to zdefiniować bo kurwa gówno
+    class selectOption{
+        constructor(elementId, styleName) {
+            this.element = window.elementStyleSettingsWindow.WindowElement.querySelector(`#${elementId}`);
+            this.styleName = styleName;
+            this.init();
+        }
+
+        init(){
+            this.element.addEventListener("change", () => {
+                window.elementStyleSettingsWindow.changeProperty(this.styleName, this.element.value);
+            });
+        }
+
+        setDefaultValues(){
+            this.element.value = this.element.options[0].value;
+            window.elementStyleSettingsWindow.changeProperty(this.styleName, this.element.value);
+        }
+
+        setVisualDefaultValues(){
+            this.element.value = this.element.options[0].value;
+        }
+
+        setValue(value){
+            this.element.value = value;
+        }
+    }
+
+    class buttonsOption{
+        constructor(buttonscontainerId, styleName) {
+            this.buttonscontainer = window.elementStyleSettingsWindow.WindowElement.querySelector(`#${buttonscontainerId}`);
+            this.styleName = styleName;
+            this.init();
+        }
+
+        init(){
+            Array.from(this.buttonscontainer.children).forEach(button => {
+                button.addEventListener("click", () => {
+                    window.elementStyleSettingsWindow.changeProperty(this.styleName, button.value);
+                });
+            });
+        }
+
+        setDefaultValues(){
+            this.buttonscontainer.children.forEach(button => {
+                button.classList.remove('selected');
+            });
+            this.buttonscontainer.children[0].classList.add('selected');
+            window.elementStyleSettingsWindow.changeProperty(this.styleName, this.buttonscontainer.children[0].value);
+        }
+
+        setVisualDefaultValues(){
+            this.buttonscontainer.children.forEach(button => {
+                button.classList.remove('selected');
+            });
+            this.buttonscontainer.children[0].classList.add('selected');
+        }
+
+        setValue(id, value){
+            this.buttonscontainer.getElementById(id).value = value;
+        }
+    }
+
+    class inputOption{
+        constructor(elementId, styleName) {
+            this.element = window.elementStyleSettingsWindow.WindowElement.querySelector(`#${elementId}`);
+            this.styleName = styleName;
+            this.init();
+        }
+
+        init(){
+            this.element.addEventListener("input", () => {
+                if(this.element.type=="text"){
+                    const value = this.element.value.trim();
+                    if (this.isValidCssSize(value) || value == "auto") {
+                        window.elementStyleSettingsWindow.changeProperty(this.styleName, value);
+                        this.element.style.borderColor = '';
+                    } else {
+                        this.element.style.borderColor = 'red';
+                    }
+                }
+            });
+        }
+
+        setDefaultValues(){
+            this.element.value = this.element.placeholder;
+            window.elementStyleSettingsWindow.changeProperty(this.styleName, this.element.value);
+        }
+
+        setVisualDefaultValues(){
+            this.element.value = this.element.placeholder;
+        }
+
+        setValue(value){
+            this.element.value = value;
+        }
+
+        isValidCssSize(value) {
+            return /^-?\d+(\.\d+)?(px|em|rem|%|vw|vh|fr|ch|ex|vmin|vmax)$/.test(value.trim());
+        }
+    }
+
+    class customInputOption{
+        constructor(elementId, styleName, customHandleFunction) {
+            this.element = window.elementStyleSettingsWindow.WindowElement.querySelector(`#${elementId}`);
+            this.styleName = styleName;
+            this.customHandleFunction = customHandleFunction;
+            this.init();
+        }
+
+        init(){
+            this.element.addEventListener("input", () => {
+                this.customHandleFunction(this.element.value);
+            });
+        }
+
+        setDefaultValues(){
+            this.element.value = this.element.placeholder;
+            window.elementStyleSettingsWindow.changeProperty(this.styleName, this.element.value);
+        }
+
+        setVisualDefaultValues(){
+            this.element.value = this.element.placeholder;
+        }
+
+        setValue(value){
+            this.element.value = value;
+        }
+    }
+
+    let layout_options_buttons = new buttonsOption('layout-options-buttons', 'display');
+    let flex_direction = new selectOption('flex-direction', 'flex-direction');
+    let column_y = new selectOption('column-y', 'justify-content');
+    let column_x = new selectOption('column-x', 'align-items');
+    let row_x = new selectOption('row-x', 'align-items');
+    let row_y = new selectOption('row-x', 'justify-content');
+    let grid_x = new selectOption('grid-x', 'justify-items');
+    let grid_y = new selectOption('grid-y', 'align-items');
+    let flex_c_gap_columns = new inputOption('column-gap-columns', 'grid-column-gap');
+    let flex_c_gap_rows = new inputOption('column-gap-rows', 'grid-row-gap');
+    let flex_r_gap_columns = new inputOption('row-gap-columns', 'grid-column-gap');
+    let flex_r_gap_rows = new inputOption('row-gap-rows', 'grid-row-gap');
+    function handleColumsChange(value) {
+        value = parseInt(value);
+        if (value < 1) return;
+        const val = Array(value).fill('1fr').join(' ');
+        window.elementStyleSettingsWindow.changeProperty('grid-template-columns', val);
+    }
+    let grid_columns = new customInputOption('columnsInput', 'grid-template-columns', handleColumsChange);
+    function handleRowsChange(value) {
+        value = parseInt(value);
+        if (value < 1) return;
+        const val = Array(value).fill('1fr').join(' ');
+        window.elementStyleSettingsWindow.changeProperty('grid-template-rows', val);
+    }
+    let grid_rows = new customInputOption('rowsInput', 'grid-template-rows', handleRowsChange);
+    let grid_flow = new selectOption('grid-direction', 'grid-auto-flow');
+    let grid_gap_columns = new inputOption('grid-gap-columns', 'grid-column-gap');
+    let grid_gap_rows = new inputOption('grid-gap-rows', 'grid-row-gap');
+
+    let margin_left = new inputOption('margin-left', 'margin-left');
+    let margin_right = new inputOption('margin-right', 'margin-right');
+    let margin_top = new inputOption('margin-top', 'margin-top');
+    let margin_bottom = new inputOption('margin-bottom', 'margin-bottom');
+    let padding_left = new inputOption('padding-left', 'padding-left');
+    let padding_right = new inputOption('padding-right', 'padding-right');
+    let padding_top = new inputOption('padding-top', 'padding-top');
+    let padding_bottom = new inputOption('padding-bottom', 'padding-bottom');
+
+    let width = new inputOption('width', 'width');
+    let min_width = new inputOption('min-width', 'min-width');
+    let max_width = new inputOption('max-width', 'max-width');
+    let height = new inputOption('height', 'height');
+    let min_height = new inputOption('min-height', 'min-height');
+    let max_height = new inputOption('max-height', 'max-height');
+
+    let overflow = new selectOption('overflow', 'overflow');
+
+    let aspect_ratio = new selectOption('aspect-ratio', 'aspect-ratio');
+    let box_sizing = new selectOption('box-sizing', 'box-sizing');
+    let object_fit = new selectOption('object-fit', 'object-fit');
+
+    function handleFitLeftPercentValue(value) {
+        value = parseInt(value);
+        if (value < 1 || value > 100) return;
+        window.elementStyleSettingsWindow.changeProperty('fit-left', `${val}%`);
+    }
+    let fit_left = new customInputOption('fit-left', 'fit-left', handleFitLeftPercentValue);
+    function handleFitTopPercentValue(value) {
+        value = parseInt(value);
+        if (value < 1 || value > 100) return;
+        window.elementStyleSettingsWindow.changeProperty('fit-top', `${val}%`);
+    }
+    let fit_top = new customInputOption('fit-top', 'fit-top', handleFitTopPercentValue);
+
+    let position = new selectOption('position', 'position');
+    let left = new inputOption('left', 'left');
+    let right = new inputOption('right', 'right');
+    let top = new inputOption('top', 'top');
+    let bottom = new inputOption('bottom', 'bottom');
+    let z_index = new inputOption('z-index', 'z-index');
+    
+    // TODO add the rest
+    // ależ kurwa mam głód alkocholowy :cccccc
+
+
+    window.elementStyleSettingsWindow.options = [layout_options_buttons, flex_direction, column_y, column_x, row_x, row_y, grid_x, grid_y, grid_columns, grid_rows, margin_left,
+    margin_right,
+    margin_top,
+    margin_bottom,
+    padding_left,
+    padding_right,
+    padding_top,
+    padding_bottom,
+    width,
+    min_width,
+    max_width,
+    height,
+    min_height,
+    max_height,
+    overflow,
+    aspect_ratio,
+    box_sizing,
+    object_fit,
+    fit_left,
+    fit_top,
+    position,
+    left,
+    right,
+    top,
+    bottom,
+    z_index,
+    ]; // TODO add the rest
+
+    window.elementStyleSettingsWindow.initTabswithButtons('layout-options-buttons', 'layout-tabs-content', [flex_direction]);
+    window.elementStyleSettingsWindow.initTabswithSelect('flex-direction', 'flex-direction-tabs-content', [column_y, column_x, row_x, row_y, grid_x, grid_y, flex_c_gap_columns, flex_c_gap_rows, flex_r_gap_columns, flex_r_gap_rows , grid_columns, grid_rows, grid_flow, grid_gap_columns, grid_gap_rows]);
+    
 });
 
 // TODO trzeba bedzie zrobić jsona z wartościami do bazy xdd

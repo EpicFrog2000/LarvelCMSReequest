@@ -9,7 +9,20 @@ export class defaultWindow {
     }
 
     bindEvents() {
-        document.addEventListener('click', (e) => this.handleDocumentClick(e));
+        //document.addEventListener('click', (e) => this.handleDocumentClick(e));
+
+        // lepsze click xd
+        let mouseDownTarget;
+        document.addEventListener('mousedown', (e) => {
+            mouseDownTarget = e.target;
+        });
+
+        document.addEventListener('click', (e) => {
+            if (mouseDownTarget === e.target) {
+                this.handleDocumentClick(e);
+            }
+            mouseDownTarget = null;
+        });
     }
 
     // TODO meh

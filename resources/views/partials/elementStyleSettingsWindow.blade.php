@@ -134,7 +134,7 @@
                 <div style="display: flex; flex-direction: column; width: 100%; max-width: 100%;">
                     <h2>Align:</h2>
                     <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; border: 1px solid black; padding: 8px;">
-                        <label for="grid-x"><strong>X (justify-items):</strong></label>
+                        <h2>X (justify-items):</h2>
                         <select id="grid-x">
                             <option value="left">left</option>
                             <option value="center">center</option>
@@ -145,7 +145,7 @@
                     </div>
 
                     <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; border: 1px solid black; padding: 8px;">
-                        <label for="grid-y"><strong>Y (align-items):</strong></label>
+                        <h2>Y (align-items):</h2>
                         <select id="grid-y">
                             <option value="top">top</option>
                             <option value="center">center</option>
@@ -204,7 +204,7 @@
     <input type="text" id="max-height" value="0px" placeholder="0px" style="border: 1px solid black;">
     <h2>overflow:<h2/>
     <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; border: 1px solid black; padding: 8px;">
-        <label for="overflow"><strong>Overflow:</strong></label>
+        <h2>Overflow:<h2/>
         <select id="overflow">
             <option value="visible">visible</option>
             <option value="hidden">hidden</option>
@@ -214,18 +214,139 @@
         </select>
     </div>
 
-    sizeoptions
-    ratio
-    box size options
-    fit
-    fit position
+
+    
+    <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; border: 1px solid black; padding: 8px;">
+        <h2>Aspect Ratio:</h2>
+        <select id="aspect-ratio">
+            <option value="1 / 1">1:1</option>
+            <option value="4 / 3">4:3</option>
+            <option value="16 / 9">16:9</option>
+            <option value="21 / 9">21:9</option>
+            <option value="auto">auto</option>
+        </select>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; border: 1px solid black; padding: 8px;">
+        <h2>Box Sizing:</h2>
+        <select id="box-sizing">
+            <option value="content-box">content-box</option>
+            <option value="border-box">border-box</option>
+        </select>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; border: 1px solid black; padding: 8px;">
+        <h2>Object Fit:</h2>
+        <select id="object-fit">
+            <option value="fill">fill</option>
+            <option value="contain">contain</option>
+            <option value="cover">cover</option>
+            <option value="none">none</option>
+            <option value="scale-down">scale-down</option>
+        </select>
+    </div>
+
+    <div style="display: flex; flex-direction: column; border: 1px solid black;">
+        <h2>fit position:</h2>
+        <h3>Left:<h3/>
+        <input type="number" id="fit-left" value="50" placeholder="50" min="0" max="100" style="border: 1px solid black;">%
+        <h3>Top:<h3/>
+        <input type="number" id="fit-top" value="50" placeholder="50" min="0" max="100" style="border: 1px solid black;">%
+    </div>
 
     <hr>
-    position
+    <h1>Position</h1>
+    <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; border: 1px solid black; padding: 8px;">
+        <h2>Position:</h2>
+        <select id="position">
+            <option value="static">static</option>
+            <option value="relative">relative</option>
+            <option value="fixed">fixed</option>
+            <option value="absolute">absolute</option>
+            <option value="sticky">sticky</option>
+        </select>
+    </div>
+    <h2>left:<h2/>
+    <input type="text" id="left" value="auto" placeholder="auto" style="border: 1px solid black;">
+    <h2>right:<h2/>
+    <input type="text" id="right" value="auto" placeholder="auto" style="border: 1px solid black;">
+    <h2>top:<h2/>
+    <input type="text" id="top" value="auto" placeholder="auto" style="border: 1px solid black;">
+    <h2>bottom:<h2/>
+    <input type="text" id="bottom" value="auto" placeholder="auto" style="border: 1px solid black;">
+
+    <h3>z-index:<h3/>
+    <input type="text" id="z-index" value="auto" placeholder="auto" style="border: 1px solid black;">
+
     <hr>
-    typography
+    <h1>Typography:<h1/>
+    <div style="display: flex; flex-direction: column; gap: 8px; border: 1px solid black; padding: 8px;">
+        <h2>Font Family:</h2>
+        <select id="font-family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Lucida Console, monospace">Lucida Console</option>
+            <option value="Tahoma, sans-serif">Tahoma</option>
+            <option value="Trebuchet MS, sans-serif">Trebuchet MS</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Impact, fantasy">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; border: 1px solid black; padding: 8px;">
+        <h2>Font weight:</h2>
+        <select id="font-weight">
+            <option value=100">100 - Thin</option>
+            <option value="200">200 - Extra Light</option>
+            <option value="300">300 - Light</option>
+            <option value="400">400 - Normal</option>
+            <option value="500">500 - Medium</option>
+            <option value="600">600 - Semi Bold</option>
+            <option value="700">700 - Bold</option>
+            <option value="800">800 - Extra Bold</option>
+            <option value="900">900 - Black</option>
+        </select>
+    </div>
+
+    <h3>size:<h3/>
+    <input type="text" id="font-size" value="14px" placeholder="14px" style="border: 1px solid black;">
+
+    <h3>height:<h3/>
+    <input type="text" id="line-height" value="14px" placeholder="14px" style="border: 1px solid black;">
+
+    <h3>color:<h3/>
+    <input type="text" id="color" value="#333" placeholder="#333" style="border: 1px solid black;">
+
+    <div style="display: flex; flex-direction: column; gap: 8px; border: 1px solid black; padding: 8px;">
+        <h2>Text Align:</h2>
+        <select id="text-align">
+            <option value="left">Left</option>
+            <option value="center">Center</option>
+            <option value="right">Right</option>
+            <option value="justify">Justify</option>
+        </select>
+    </div>
+    <h2>Decor:</h2>
+    <div style="display: flex; flex-direction: column; gap: 8px; border: 1px solid black; padding: 8px;">
+        <h2>Text Decoration:</h2>
+        <select id="text-decoration">
+            <option value="none">None</option>
+            <option value="underline">Underline</option>
+            <option value="line-through">Line-through</option>
+            <option value="overline">Overline</option>
+            <option value="underline line-through">Underline & Line-through</option>
+        </select>
+    </div>
+    <!-- TODO dodać opcje decor xdd nie chce mi się -->
     <hr>
-    backgrounds
+    <h2>Backgrounds:</h2>
+    Images & gradient - to będą tabsy
+
+    Color
+    Clipping
     <hr>
     borders
     <hr>

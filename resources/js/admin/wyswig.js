@@ -182,9 +182,6 @@ export class wyswigEditor {
             });
         });
 
-
-
-
         function compareObject(a, b) {
             let differences = {};
 

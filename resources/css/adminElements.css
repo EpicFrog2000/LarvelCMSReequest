@@ -39,7 +39,7 @@
 
     max-width: 100vw;
     max-height: 100vh;
-    overflow: hidden; /* żeby nic nie wystawało */
+    overflow: hidden;
     display: flex;
     flex-direction: column;
 }
@@ -196,4 +196,5 @@
     right: 0;
     transform: none;
     top: 0;
+    overflow-y: scroll;
 }

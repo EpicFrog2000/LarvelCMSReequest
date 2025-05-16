@@ -28,6 +28,11 @@ class zarzadzaniePlikamiWindow extends defaultWindow {
         this.setItems(this.defaultPath);
     }
 
+    hideWindowElement(){
+        super.hideWindowElement?.();
+        this.clearItems();
+    }
+
     getFilesAndFolders(path) {
         const formattedPath = path.startsWith('/') ? path : `/${path}`;
         return fetch(`/getFilesAndFolders${formattedPath}`)
