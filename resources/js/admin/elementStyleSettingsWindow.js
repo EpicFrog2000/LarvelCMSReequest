@@ -8,7 +8,6 @@ class elementStyleSettingsWindow extends defaultWindow {
 
     showWindowElement(){
         super.showWindowElement?.();
-
     }
 
     defaultAllOptions(){
@@ -293,10 +292,53 @@ document.addEventListener('DOMContentLoaded', () => {
     let top = new inputOption('top', 'top');
     let bottom = new inputOption('bottom', 'bottom');
     let z_index = new inputOption('z-index', 'z-index');
+
+    let font_family = new selectOption('font-family', 'font-family');
+    let font_weight = new selectOption('font-weight', 'font-weight');
+    let font_size = new inputOption('font-size', 'font-size');
+    let line_height = new inputOption('line-height', 'line-height');
+    let color = new inputOption('color', 'color');
+    let text_align = new selectOption('text-align', 'text-align');
+    let text_decoration = new selectOption('text-decoration', 'text-decoration');
+    let background_clip = new selectOption('background-clip', 'background-clip');
+    let border_top_left_radius = new inputOption('border-top-left-radius', 'border-top-left-radius');
+    let border_bottom_left_radius = new inputOption('border-bottom-left-radius', 'border-bottom-left-radius');
+    let border_top_right_radius = new inputOption('border-top-right-radius', 'border-top-right-radius');
+    let border_bottom_right_radius = new inputOption('border-bottom-right-radius', 'border-bottom-right-radius');
     
+    let border_top_style = new selectOption('border-top-style', 'border-top-style');
+    let border_bottom_style = new selectOption('border-bottom-style', 'border-bottom-style');
+    let border_right_style = new selectOption('border-right-style', 'border-right-style');
+    let border_left_style = new selectOption('border-left-style', 'border-left-style');
+    let border_bottom_width = new inputOption('border-bottom-width', 'border-bottom-width');
+    let border_bottom_color = new inputOption('border-bottom-color', 'border-bottom-color');
+
+    let border_top_width = new inputOption('border-top-width', 'border-top-width');
+    let border_top_color = new inputOption('border-top-color', 'border-top-color');
+    let border_left_width = new inputOption('border-left-width', 'border-left-width');
+    let border_left_color = new inputOption('border-left-color', 'border-left-color');
+    let border_right_width = new inputOption('border-right-width', 'border-right-width');
+    let border_right_color = new inputOption('border-right-color', 'border-right-color');
+
+    function createPropertySetter(propertyName) {
+        return function(value) {
+            window.elementStyleSettingsWindow.changeProperty(propertyName, value);
+        };
+    }
+    let background_color = new customInputOption('background-color', 'background-color', createPropertySetter('background-color'));
+
+    let gradient = new customInputOption('gradient', 'background', createPropertySetter('background'));
+    function setbgimage(value){
+        window.elementStyleSettingsWindow.changeProperty('background-image', `url("${value}")`);
+    }
+    let background_image_url = new customInputOption('background-image-url', 'background-image', setbgimage);
+    let background_repeat = new selectOption('background-repeat', 'background-repeat');
+    let background_size = new selectOption('background-size', 'background-size');
+    let opacity = new inputOption('opacity', 'opacity');
+    //todo pozmieniac na customInputOption
+
     // TODO add the rest
     // ależ kurwa mam głód alkocholowy :cccccc
-
 
     window.elementStyleSettingsWindow.options = [layout_options_buttons, flex_direction, column_y, column_x, row_x, row_y, grid_x, grid_y, grid_columns, grid_rows, margin_left,
     margin_right,
@@ -324,11 +366,43 @@ document.addEventListener('DOMContentLoaded', () => {
     top,
     bottom,
     z_index,
+    font_family,
+    font_weight,
+    font_size,
+    line_height,
+    color,
+    text_align,
+    text_decoration,
+    background_clip,
+    border_top_left_radius,
+    border_bottom_left_radius,
+    border_top_right_radius,
+    border_bottom_right_radius,
+    border_top_style,
+    border_bottom_style,
+    border_right_style,
+    border_left_style,
+    border_bottom_width,
+    border_bottom_color,
+    border_top_width,
+    border_top_color,
+    border_left_width,
+    border_left_color,
+    border_right_width,
+    border_right_color,
+    opacity,
     ]; // TODO add the rest
 
     window.elementStyleSettingsWindow.initTabswithButtons('layout-options-buttons', 'layout-tabs-content', [flex_direction]);
     window.elementStyleSettingsWindow.initTabswithSelect('flex-direction', 'flex-direction-tabs-content', [column_y, column_x, row_x, row_y, grid_x, grid_y, flex_c_gap_columns, flex_c_gap_rows, flex_r_gap_columns, flex_r_gap_rows , grid_columns, grid_rows, grid_flow, grid_gap_columns, grid_gap_rows]);
-    
+    window.elementStyleSettingsWindow.initTabswithSelect('bg-type', 'bg-type-tabs-content', [
+        background_color,
+        gradient,
+        background_image_url,
+        background_repeat,
+        background_size,
+    ]);
+
 });
 
 // TODO trzeba bedzie zrobić jsona z wartościami do bazy xdd

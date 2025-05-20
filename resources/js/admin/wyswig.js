@@ -44,6 +44,29 @@ export class wyswigEditor {
             });
     }
 
+    static compareJsonStrings(json1, json2){
+        function normalizeJsonString(jsonStr) {
+            const obj = JSON.parse(jsonStr);
+            return JSON.stringify(sortObjectKeys(obj));
+        }
+
+        function sortObjectKeys(obj) {
+            if (Array.isArray(obj)) {
+                return obj.map(sortObjectKeys);
+            } else if (obj !== null && typeof obj === 'object') {
+                return Object.keys(obj)
+                    .sort()
+                    .reduce((result, key) => {
+                        result[key] = sortObjectKeys(obj[key]);
+                        return result;
+                    }, {});
+            }
+            return obj;
+        }
+
+        return normalizeJsonString(json1) === normalizeJsonString(json2);
+    }
+
 
     static getElementsStructure() {
         let values = [];
@@ -59,7 +82,13 @@ export class wyswigEditor {
     static getElementsChildren(element, order = 1) {
         const tag = element.tagName.toUpperCase();
         const isMedia = element.getAttribute('data-type') === 'media';
-        
+        const cssJson = {};
+        const style = getComputedStyle(element);
+        for (let i = 0; i < style.length; i++) {
+            const prop = style[i];
+            cssJson[prop] = style.getPropertyValue(prop);
+        }
+
         if (tag === 'WYSWIGCONTAINER') {
             const children = Array.from(element.children);
             const values = [];
@@ -77,7 +106,8 @@ export class wyswigEditor {
             return {
                 id: parseInt(element.getAttribute('data-id')),
                 order: order,
-                values: values
+                values: values,
+                CustomStyleOptions: JSON.stringify(cssJson)
             };
 
         } else if (tag === 'WYSWIGELEMENT') {
@@ -87,7 +117,13 @@ export class wyswigEditor {
             elements.forEach(el => {
                 let id = el.getAttribute('data-id');
                 if (id !== null) {
-                    valuesvalues[id] = {'value': el.innerHTML};
+                    const cssJsoninternal = {};
+                    const styleInternal = getComputedStyle(el);
+                    for (let i = 0; i < styleInternal.length; i++) {
+                        const prop = styleInternal[i];
+                        cssJsoninternal[prop] = styleInternal.getPropertyValue(prop);
+                    }
+                    valuesvalues[id] = {'value': el.innerHTML, 'CustomStyleOptions': cssJsoninternal};
                 }
             });
 
@@ -95,16 +131,21 @@ export class wyswigEditor {
             media_elements.forEach(el => {
                 let id = el.getAttribute('data-id');
                 if (id !== null) {
-                    valuesvalues[id] = {'value': el.src};
+                    const cssJsoninternal = {};
+                    const styleInternal = getComputedStyle(el);
+                    for (let i = 0; i < styleInternal.length; i++) {
+                        const prop = styleInternal[i];
+                        cssJsoninternal[prop] = styleInternal.getPropertyValue(prop);
+                    }
+                    valuesvalues[id] = {'value': el.src, 'CustomStyleOptions': cssJsoninternal};
                 }
             });
-
 
             let value = {};
             value.id = parseInt(element.getAttribute('data-id'));
             value.order = order;
             value.values = valuesvalues;
-
+            value.CustomStyleOptions = JSON.stringify(cssJson);
             return value;
 
 
@@ -174,7 +215,7 @@ export class wyswigEditor {
                 modifiedValues_v2.push(value);
             });
         });
-
+            console.log(modifiedValues_v2);
         let startValues = []
         Array.from(window.StartValues).forEach(modifiedValue => {
             Object.entries(modifiedValue).forEach(([key, value]) => {
@@ -187,6 +228,10 @@ export class wyswigEditor {
 
             if (a.order !== b.order) {
                 differences.order = { before: a.order, after: b.order };
+            }
+
+            if(!wyswigEditor.compareJsonStrings(a.CustomStyleOptions, b.CustomStyleOptions)){
+                differences.CustomStyleOptions = { before: a.CustomStyleOptions, after: b.CustomStyleOptions };
             }
 
             if(Object.keys(differences).length > 0){
@@ -237,21 +282,32 @@ export class wyswigEditor {
                     if (b.values.hasOwnProperty(id)) {
                         let aVal = a.values[id].value;
                         let bVal = b.values[id].value;
-
+                        
                         try {
                             aVal = new URL(aVal).pathname;
                             aVal = ensureTrailingSlash(aVal);
                         } catch (e) {}
+
                         try {
                             bVal = new URL(bVal).pathname;
                             bVal = ensureTrailingSlash(bVal);
                         } catch (e) {}
-
+                        if (!changes[id]) {
+                            changes[id] = [];
+                        }
                         if (aVal !== bVal) {
-                            changes[id] = {
+                            changes[id].push({
+                                type: 'value',
                                 from: aVal,
                                 to: bVal
-                            };
+                            });
+                        }
+                        if (!wyswigEditor.compareJsonStrings(JSON.stringify(a.values[id].CustomStyleOptions), JSON.stringify(b.values[id].CustomStyleOptions))) {
+                            changes[id].push({
+                                type: 'CustomStyleOptions',
+                                from: JSON.stringify(a.values[id].CustomStyleOptions),
+                                to: JSON.stringify(b.values[id].CustomStyleOptions)
+                            });
                         }
                     }
                 }
@@ -324,7 +380,6 @@ export class wyswigEditor {
         });
     }
 }
-
 
 // japierole Andrzej robił to 5 lat?
 // ale się wjebałem w bagno...
